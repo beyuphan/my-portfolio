@@ -6,10 +6,23 @@ import 'katex/dist/katex.min.css';
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  const project = projects.find(p => p.id === parseInt(id));
+  
+  // Mevcut projenin index'ini buluyoruz
+  const currentIndex = projects.findIndex(p => p.id === parseInt(id));
+  const project = projects[currentIndex];
+
+  // Sonraki projeyi hesaplıyoruz (Son projeden sonra ilk projeye döner)
+  const nextProject = projects.length > 0 ? projects[(currentIndex + 1) % projects.length] : null;
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // DOM tam olarak güncellendikten hemen sonra sayfanın en üstüne atmasını garantiliyoruz
+    setTimeout(() => {
+      window.scrollTo({ 
+        top: 0, 
+        left: 0, 
+        behavior: 'instant' // 'smooth' yaparsan yukarı kaydığını görürsün, instant direkt atar
+      });
+    }, 10);
   }, [id]);
 
   if (!project) {
@@ -183,7 +196,7 @@ const ProjectDetail = () => {
             <div className="mt-16 pt-8 border-t border-gray-100 space-y-4">
               <div className="flex justify-between text-[10px] mono-detail">
                 <span>Location</span>
-                <span className="text-black">Samsun / OMU [cite: 2]</span>
+                <span className="text-black">Samsun / OMU</span>
               </div>
               <div className="flex justify-between text-[10px] mono-detail">
                 <span>Phase</span>
@@ -193,6 +206,28 @@ const ProjectDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Projeler Arası Geçiş (Sonraki Proje) */}
+      {nextProject && (
+        <div className="mt-32 pt-16 border-t border-gray-100 flex justify-end reveal">
+          <Link 
+            to={`/project/${nextProject.id}`} 
+            className="group flex flex-col items-end text-right"
+          >
+            <span className="mono-detail text-gray-400 mb-3 tracking-[0.3em] text-xs">
+              NEXT PROJECT
+            </span>
+            <div className="flex items-center gap-6 text-[#1d1d1f] transition-colors">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tighter group-hover:text-blue-600 transition-colors duration-300">
+                {nextProject.title}
+              </h2>
+              <span className="text-4xl md:text-5xl lg:text-6xl font-light transform transition-transform duration-500 group-hover:translate-x-4 group-hover:text-blue-600">
+                →
+              </span>
+            </div>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

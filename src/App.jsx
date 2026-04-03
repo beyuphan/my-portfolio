@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import MainContent from './sections/MainContent';
 import ProjectDetail from './sections/ProjectDetails';
 import './styles/index.css';
+import HRAgent from './components/HRAgent';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<MainContent />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
         </Routes>
+        <HRAgent />
         <footer className="py-20 text-center border-t border-gray-50">
           <span className="mono-detail text-[9px]">
             DESIGNED WITH ENGINEERING DISCIPLINE — 2026
