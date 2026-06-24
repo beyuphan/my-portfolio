@@ -2,7 +2,7 @@
 
 Kişisel portfolyo sitesi. React 19 + Vite + Tailwind CSS 4 ile geliştirildi.
 
-🔗 Canlı: [eyuphan.netlify.app](https://eyuphan.netlify.app)
+🔗 Canlı: [beyuphan.vercel.app](https://beyuphan.vercel.app)
 
 ## Özellikler
 

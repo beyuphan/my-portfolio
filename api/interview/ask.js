@@ -40,7 +40,7 @@ GÜÇLÜ YANLARIM:
 
 SERTİFİKALAR: Savunma Sanayi Akademi SSA 401 (2026), Jetpack Compose for Android Bootcamp (2025), Blockchain 101 — Coderspace (2025), İSG Hizmetleri Yönetimi (2025).
 DİLLER: Türkçe (ana dil), İngilizce (orta seviye).
-İLETİŞİM: eyuphan546@gmail.com · github.com/beyuphan · eyuphan.netlify.app
+İLETİŞİM: eyuphan546@gmail.com · github.com/beyuphan · beyuphan.vercel.app
 `;
 
 // Basit, instance-içi (best-effort) rate limit — Gemini kotasını korur.
