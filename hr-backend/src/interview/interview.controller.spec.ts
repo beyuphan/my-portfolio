@@ -7,7 +7,6 @@ export class InterviewController {
 
   @Post('ask')
   async askQuestion(@Body('question') question: string) {
-    console.log('BOMBA: İSTEK SONUNDA GELDİ!');
     // Soru boş gelirse diye ufak bir güvenlik
     if (!question) {
       return { error: "Lütfen bir soru gönderin." };

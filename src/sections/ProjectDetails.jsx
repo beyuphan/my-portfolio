@@ -1,45 +1,46 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { projects } from '../data/projects';
+import { useApp } from '../context/AppContext';
 import { BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
 const ProjectDetail = () => {
   const { id } = useParams();
-  
-  // Mevcut projenin index'ini buluyoruz
+  const { t, L, mode } = useApp();
+
   const currentIndex = projects.findIndex(p => p.id === parseInt(id));
   const project = projects[currentIndex];
-
-  // Sonraki projeyi hesaplıyoruz (Son projeden sonra ilk projeye döner)
   const nextProject = projects.length > 0 ? projects[(currentIndex + 1) % projects.length] : null;
 
   useEffect(() => {
-    // DOM tam olarak güncellendikten hemen sonra sayfanın en üstüne atmasını garantiliyoruz
     setTimeout(() => {
-      window.scrollTo({ 
-        top: 0, 
-        left: 0, 
-        behavior: 'instant' // 'smooth' yaparsan yukarı kaydığını görürsün, instant direkt atar
-      });
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }, 10);
   }, [id]);
 
   if (!project) {
     return (
       <div className="pt-40 text-center">
-        <span className="mono-detail">404 // Project not found.</span>
-        <Link to="/" className="block mt-4 underline">Return to safety</Link>
+        <span className="mono-detail">{t('pd.notFound')}</span>
+        <Link to="/" className="block mt-4 underline">{t('pd.return')}</Link>
       </div>
     );
   }
+
+  const td = project.technicalDetails || {};
+  const isTech = mode === 'technical';
+  const isHr = mode === 'hr';
+  const role = L(project.role);
+  const impact = L(project.impact);
+  const algorithms = L(project.algorithms);
 
   return (
     <div className="reveal pt-32 pb-32 px-8 max-w-6xl mx-auto text-[#1d1d1f]">
       {/* Üst Navigasyon */}
       <div className="mb-16 flex justify-between items-center">
         <Link to="/" className="mono-detail hover:text-black transition-colors flex items-center gap-2">
-          <span className="text-lg">←</span> BACK TO WORKS
+          <span className="text-lg">←</span> {t('pd.back')}
         </Link>
         <div className="flex items-center gap-4">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -49,36 +50,39 @@ const ProjectDetail = () => {
 
       {/* Başlık ve Özet */}
       <header className="mb-24">
-        <span className="mono-detail block mb-4 text-blue-600 font-bold">{project.category}</span>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+          <span className="mono-detail text-blue-600 font-bold">{L(project.category)}</span>
+          {role && <span className="mono-detail text-gray-400">// {role}</span>}
+          {project.year && <span className="mono-detail text-gray-400">// {project.year}</span>}
+        </div>
         <h1 className="hero-title mb-10 text-6xl md:text-8xl lg:text-9xl leading-[0.85] tracking-tighter">
           {project.title}
         </h1>
         <p className="text-2xl md:text-3xl text-gray-400 leading-tight max-w-4xl font-light">
-          {project.description}
+          {L(project.description)}
         </p>
       </header>
 
       {/* Ana İçerik Grid Yapısı */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 border-t border-gray-100 pt-16">
-        
+
         {/* Sol Sütun: Mühendislik Derinliği */}
         <div className="lg:col-span-8 space-y-24">
-          
-          {/* 01 / Problem Tanımı */}
+
+          {/* Problem */}
           <section>
-            <h3 className="mono-detail text-black mb-8">01 / The Challenge</h3>
+            <h3 className="mono-detail text-black mb-8">{t('pd.challenge')}</h3>
             <p className="text-xl text-gray-700 leading-relaxed font-medium">
-              {project.technicalDetails?.problem}
+              {L(td.problem)}
             </p>
           </section>
 
-          {/* 02 / Mühendislik Çözümü */}
+          {/* Çözüm */}
           <section>
-            <h3 className="mono-detail text-black mb-8">02 / Engineering Solution</h3>
+            <h3 className="mono-detail text-black mb-8">{t('pd.solution')}</h3>
             <div className="text-lg text-gray-500 leading-relaxed space-y-6">
-              <p>{project.technicalDetails?.solution}</p>
-              
-              {/* Fourier projesi için Karizmatik Matematik */}
+              <p>{L(td.solution)}</p>
+
               {project.id === 3 && (
                 <div className="bg-white p-12 rounded-3xl border border-gray-100 shadow-sm text-center my-12 group transition-all hover:shadow-md">
                   <p className="mb-8 text-[10px] mono-detail tracking-[0.4em] opacity-40">Mathematical Foundation // FFT </p>
@@ -90,8 +94,23 @@ const ProjectDetail = () => {
             </div>
           </section>
 
-          {/* 03 / Engineering Note - Vurgulu Kutu */}
-          {project.technicalDetails?.engineeringNote && (
+          {/* İK Modu: Etki & Sonuç */}
+          {isHr && impact?.length > 0 && (
+            <section>
+              <h3 className="mono-detail text-black mb-8">{t('pd.impact')}</h3>
+              <div className="space-y-4">
+                {impact.map((it, i) => (
+                  <div key={i} className="flex gap-4 items-start">
+                    <span className="text-green-500 font-bold mt-1">✓</span>
+                    <span className="text-lg text-gray-600 leading-relaxed">{it}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Mühendislik Notu — Normal & Teknik */}
+          {!isHr && td.engineeringNote && (
             <section>
               <div className="bg-blue-50/30 border border-blue-100 p-8 rounded-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:rotate-12 transition-transform duration-700">
@@ -99,32 +118,57 @@ const ProjectDetail = () => {
                     <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
                   </svg>
                 </div>
-                <h4 className="mono-detail text-blue-600 mb-4 tracking-[0.3em]">Engineering Note</h4>
+                <h4 className="mono-detail text-blue-600 mb-4 tracking-[0.3em]">{t('pd.engNote')}</h4>
                 <p className="text-gray-700 italic leading-relaxed relative z-10 text-lg">
-                  "{project.technicalDetails.engineeringNote}"
+                  "{L(td.engineeringNote)}"
                 </p>
               </div>
             </section>
           )}
 
-          {/* 04 / Technical Flow - Adım Adım Süreç */}
-          {project.technicalDetails?.flow && (
+          {/* Teknik Mod: Mimari */}
+          {isTech && project.architecture && (
             <section>
-              <h3 className="mono-detail text-black mb-12">03 / Technical Flow</h3>
+              <h3 className="mono-detail text-black mb-8">{t('pd.architecture')}</h3>
+              <p className="text-lg text-gray-500 leading-relaxed font-mono bg-gray-50 border border-gray-100 rounded-2xl p-6">
+                {L(project.architecture)}
+              </p>
+            </section>
+          )}
+
+          {/* Teknik Mod: Algoritmalar & Teknikler */}
+          {isTech && algorithms?.length > 0 && (
+            <section>
+              <h3 className="mono-detail text-black mb-8">{t('pd.algorithms')}</h3>
+              <div className="space-y-3">
+                {algorithms.map((a, i) => (
+                  <div key={i} className="flex gap-4 items-start font-mono text-sm">
+                    <span className="text-blue-500 font-bold">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="text-gray-700 leading-relaxed">{a}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Teknik Akış — Normal & Teknik */}
+          {!isHr && td.flow && (
+            <section>
+              <h3 className="mono-detail text-black mb-12">{t('pd.techFlow')}</h3>
               <div className="space-y-12 pl-4">
-                {project.technicalDetails.flow.map((step, index) => (
+                {td.flow.map((step, index) => (
                   <div key={index} className="flex gap-8 group">
                     <div className="flex flex-col items-center">
                       <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-xs font-bold group-hover:border-black group-hover:bg-black group-hover:text-white transition-all duration-500">
                         {index + 1}
                       </div>
-                      {index !== project.technicalDetails.flow.length - 1 && (
+                      {index !== td.flow.length - 1 && (
                         <div className="w-[1px] h-full bg-gray-100 mt-4"></div>
                       )}
                     </div>
                     <div className="pb-12">
-                      <h5 className="font-bold text-xl mb-3 tracking-tight text-[#1d1d1f]">{step.stepTitle}</h5>
-                      <p className="text-gray-500 leading-relaxed max-w-2xl">{step.stepDesc}</p>
+                      <h5 className="font-bold text-xl mb-3 tracking-tight text-[#1d1d1f]">{L(step.stepTitle)}</h5>
+                      <p className="text-gray-500 leading-relaxed max-w-2xl">{L(step.stepDesc)}</p>
                     </div>
                   </div>
                 ))}
@@ -132,11 +176,11 @@ const ProjectDetail = () => {
             </section>
           )}
 
-          {/* 05 / Teknik Çıktılar / Highlights */}
+          {/* Çıktılar / Highlights — tüm modlar */}
           <section className="bg-white border border-gray-100 p-12 rounded-3xl shadow-sm">
-            <h3 className="mono-detail text-black mb-8">04 / Key Deliverables</h3>
+            <h3 className="mono-detail text-black mb-8">{t('pd.deliverables')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              {project.technicalDetails?.highlights?.map((h, i) => (
+              {L(td.highlights)?.map((h, i) => (
                 <div key={i} className="flex gap-4 items-start">
                   <span className="text-blue-500 font-mono font-bold">0{i+1}</span>
                   <span className="text-sm font-semibold text-gray-600 uppercase tracking-[0.1em] leading-relaxed">{h}</span>
@@ -151,7 +195,7 @@ const ProjectDetail = () => {
           <div className="sticky top-32">
             {/* Tech Stack */}
             <div className="mb-12">
-              <h4 className="mono-detail text-black mb-6">Built With</h4>
+              <h4 className="mono-detail text-black mb-6">{t('pd.builtWith')}</h4>
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag, i) => (
                   <span key={i} className="tech-tag bg-white border border-gray-200 text-[#1d1d1f] px-3 py-1.5 font-bold">
@@ -163,59 +207,71 @@ const ProjectDetail = () => {
 
             {/* Resources & Links */}
             <div className="space-y-4">
-              <h4 className="mono-detail text-black mb-6">Execution</h4>
-              <a 
-                href={project.link} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="group flex justify-between items-center p-5 bg-[#1d1d1f] text-white rounded-2xl hover:bg-blue-600 transition-all duration-500"
-              >
-                <span className="text-xs font-bold tracking-[0.2em] uppercase">Source Code</span>
-                <span className="text-xl group-hover:translate-x-1 transition-transform">↗</span>
-              </a>
+              <h4 className="mono-detail text-black mb-6">{t('pd.execution')}</h4>
+
+              {project.demoLink && (
+                <a
+                  href={project.demoLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex justify-between items-center p-5 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all duration-500"
+                >
+                  <span className="text-xs font-bold tracking-[0.2em] uppercase">{t('pd.demo')}</span>
+                  <span className="text-xl group-hover:translate-x-1 transition-transform">↗</span>
+                </a>
+              )}
+
+              {project.link && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex justify-between items-center p-5 bg-[#1d1d1f] text-white rounded-2xl hover:bg-blue-600 transition-all duration-500"
+                >
+                  <span className="text-xs font-bold tracking-[0.2em] uppercase">{t('pd.sourceCode')}</span>
+                  <span className="text-xl group-hover:translate-x-1 transition-transform">↗</span>
+                </a>
+              )}
 
               {project.reportPath ? (
-                <a 
-                  href={project.reportPath} 
-                  target="_blank" 
+                <a
+                  href={project.reportPath}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex justify-between items-center p-5 border border-gray-200 rounded-2xl hover:border-black transition-all group"
                 >
-                  <span className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 text-black">Documentation</span>
+                  <span className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 group-hover:opacity-100 text-black">{t('pd.documentation')}</span>
                   <span className="text-xs font-mono opacity-30 italic text-black">PDF</span>
                 </a>
-              ) : (
+              ) : (!project.link && !project.demoLink) ? (
                 <div className="w-full flex justify-between items-center p-5 border border-gray-50 rounded-2xl cursor-not-allowed opacity-20 bg-gray-50">
-                  <span className="text-xs font-bold tracking-widest uppercase text-black">Documentation</span>
-                  <span className="text-[9px] mono-detail text-black italic">Soon</span>
+                  <span className="text-xs font-bold tracking-widest uppercase text-black">{t('pd.documentation')}</span>
+                  <span className="text-[9px] mono-detail text-black italic">{t('pd.soon')}</span>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {/* Extra Meta Info */}
             <div className="mt-16 pt-8 border-t border-gray-100 space-y-4">
               <div className="flex justify-between text-[10px] mono-detail">
-                <span>Location</span>
+                <span>{t('pd.location')}</span>
                 <span className="text-black">Samsun / OMU</span>
               </div>
               <div className="flex justify-between text-[10px] mono-detail">
-                <span>Phase</span>
-                <span className="text-black">Engineering Complete</span>
+                <span>{t('pd.phase')}</span>
+                <span className="text-black">{t('pd.phaseVal')}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Projeler Arası Geçiş (Sonraki Proje) */}
+      {/* Sonraki Proje */}
       {nextProject && (
         <div className="mt-32 pt-16 border-t border-gray-100 flex justify-end reveal">
-          <Link 
-            to={`/project/${nextProject.id}`} 
-            className="group flex flex-col items-end text-right"
-          >
+          <Link to={`/project/${nextProject.id}`} className="group flex flex-col items-end text-right">
             <span className="mono-detail text-gray-400 mb-3 tracking-[0.3em] text-xs">
-              NEXT PROJECT
+              {t('pd.nextProject')}
             </span>
             <div className="flex items-center gap-6 text-[#1d1d1f] transition-colors">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tighter group-hover:text-blue-600 transition-colors duration-300">

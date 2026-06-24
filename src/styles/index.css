@@ -11,6 +11,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem; /* fixed navbar yüksekliği kadar offset */
     @apply antialiased;
   }
   body {

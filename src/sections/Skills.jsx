@@ -1,14 +1,22 @@
 import React from 'react';
 import { skills } from '../data/skills';
+import { useApp } from '../context/AppContext';
 
 const Skills = () => {
+  const { t, L } = useApp();
+  const titleLines = t('skills.title').split('\n');
+
   return (
     <section id="skills" className="max-w-7xl mx-auto px-8 py-32 border-t border-gray-100">
       <div className="flex flex-col md:flex-row justify-between items-start mb-20 gap-6">
         <div>
-          <span className="mono-detail block mb-4">Core Competencies</span>
+          <span className="mono-detail block mb-4">{t('skills.label')}</span>
           <h2 className="text-4xl md:text-5xl font-black tracking-tighter">
-            Teknik <br /> Yetkinlikler.
+            {titleLines.map((line, i) => (
+              <React.Fragment key={i}>
+                {line}{i < titleLines.length - 1 && <br />}
+              </React.Fragment>
+            ))}
           </h2>
         </div>
       </div>
@@ -17,7 +25,7 @@ const Skills = () => {
         {skills.map((skillGroup, index) => (
           <div key={index} className="space-y-8">
             <h3 className="mono-detail text-black border-b border-gray-200 pb-4">
-              {skillGroup.category}
+              {L(skillGroup.category)}
             </h3>
             <div className="flex flex-wrap gap-x-8 gap-y-6">
               {skillGroup.items.map((item, i) => (

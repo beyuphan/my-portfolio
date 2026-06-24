@@ -1,19 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+// Vercel Serverless Function — /api/interview/ask
+// HR agent: Gemini ile Eyüphan'ın ağzından (birinci şahıs) cevap üretir.
+// GEMINI_API_KEY Vercel ortam değişkeni olarak verilir (client'a sızmaz).
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-@Injectable()
-export class InterviewService {
-  private genAI: GoogleGenerativeAI;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const MODELS = ['gemini-2.5-flash', 'gemini-2.5-pro'];
 
-  constructor(private configService: ConfigService) {
-    this.genAI = new GoogleGenerativeAI(
-      this.configService.get<string>('GEMINI_API_KEY')!,
-    );
-  }
-
-  // Eyüphan'ın gerçek profili — Gemini bunları temel alarak "ben" diliyle cevap verir.
-  private readonly persona = `
+const persona = `
 EYÜPHAN BİNİCİ HAKKINDA (sen busun):
 - Ondokuz Mayıs Üniversitesi Bilgisayar Mühendisliğini 2026'da BİTİRDİM; artık MEZUNUM (öğrenci DEĞİLİM, asla "öğrenciyim" veya "mezun olmayı hedefliyorum" deme). Ayrıca Anadolu Üniversitesi Görsel İletişim (açıköğretim, devam ediyor).
 - Samsun'da yaşıyorum. Backend & full-stack ve mobil geliştirme odaklıyım.
@@ -50,11 +43,43 @@ DİLLER: Türkçe (ana dil), İngilizce (orta seviye).
 İLETİŞİM: eyuphan546@gmail.com · github.com/beyuphan · eyuphan.netlify.app
 `;
 
-  // Birincil + yedek model (biri yoğunsa diğerine düşülür)
-  private readonly models = ['gemini-2.5-flash', 'gemini-2.5-pro'];
+// Basit, instance-içi (best-effort) rate limit — Gemini kotasını korur.
+const hits = new Map();
+function rateLimited(ip) {
+  const now = Date.now();
+  const windowMs = 60_000;
+  const max = 8;
+  const arr = (hits.get(ip) || []).filter((t) => now - t < windowMs);
+  if (arr.length >= max) return true;
+  arr.push(now);
+  hits.set(ip, arr);
+  return false;
+}
 
-  async processInterviewQuestion(question: string) {
-    const prompt = `${this.persona}
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
+  }
+
+  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+  const question = (body.question || '').toString().trim();
+
+  if (!question) { res.status(400).json({ message: 'Soru boş olamaz.' }); return; }
+  if (question.length > 300) { res.status(400).json({ message: 'Soru çok uzun (en fazla 300 karakter).' }); return; }
+
+  const ip = (req.headers['x-forwarded-for'] || '').toString().split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    res.status(429).json({ message: 'Çok hızlı soru gönderiyorsunuz. Lütfen biraz bekleyin.' });
+    return;
+  }
+
+  if (!process.env.GEMINI_API_KEY) {
+    res.status(500).json({ message: 'GEMINI_API_KEY tanımlı değil.' });
+    return;
+  }
+
+  const prompt = `${persona}
 
 KURALLAR:
 - Sen Eyüphan Binici'sin. Soruya BİRİNCİ TEKİL ŞAHISLA ("ben") cevap ver — sanki bir iş görüşmesindesin.
@@ -65,25 +90,26 @@ KURALLAR:
 
 SORU: ${question}`;
 
-    let lastErr: unknown;
-    for (const modelName of this.models) {
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          const model = this.genAI.getGenerativeModel({ model: modelName });
-          const result = await model.generateContent(prompt);
-          return { question, answer: result.response.text().trim() };
-        } catch (err) {
-          lastErr = err;
-          const status = (err as { status?: number })?.status;
-          // 503 (yoğun) / 429 (limit) → kısa bekleyip tekrar dene; değilse sonraki modele geç
-          if (status === 503 || status === 429) {
-            await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
-            continue;
-          }
-          break;
+  let lastErr;
+  for (const modelName of MODELS) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
+        res.status(200).json({ question, answer: result.response.text().trim() });
+        return;
+      } catch (err) {
+        lastErr = err;
+        const status = err?.status;
+        if (status === 503 || status === 429) {
+          await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+          continue;
         }
+        break;
       }
     }
-    throw lastErr;
   }
+
+  console.error('Gemini error:', lastErr);
+  res.status(503).json({ message: 'Agent şu an yanıt veremiyor, lütfen tekrar deneyin.' });
 }

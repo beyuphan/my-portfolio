@@ -1,3 +1,12 @@
+# Env (local) — production env değişkenleri Netlify panelinden verilir
+.env
+.env.*
+!.env.example
+
+# Backend çalışma logları
+hr-backend/run.log
+hr-backend/run.err
+
 # Logs
 logs
 *.log
@@ -22,3 +31,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Kullanılmayan (ses özelliği kaldırıldı)
+hr-backend/hr_voice_sample.m4a
