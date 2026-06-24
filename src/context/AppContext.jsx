@@ -39,9 +39,9 @@ export const AppProvider = ({ children }) => {
         'nav.location': 'SAMSUN / 41.02° N',
 
         // Hero
-        'hero.status': 'Bilgisayar Mühendisliği Mezunu',
-        'hero.title': 'Basitliği\nKoda Dökmek.',
-        'hero.desc': 'Abartıdan uzak, işlevselliğe odaklanan bir yaklaşımla; GeoIntel gibi proaktif sistemlerden sinyal işleme algoritmalarına kadar mühendislik çözümleri üretiyorum.',
+        'hero.status': 'Bilgisayar Mühendisi',
+        'hero.title': 'Uçtan uca\nmühendislik.',
+        'hero.desc': 'Veriyi karara, fikri ürüne dönüştürüyorum. GeoIntel gibi yapay zekâ sistemlerinden mobil uygulamalara kadar; uçtan uca, temiz ve ölçeklenebilir kodla inşa ediyorum.',
         'hero.projects': 'Proje',
 
         // Mode labels
@@ -144,9 +144,9 @@ export const AppProvider = ({ children }) => {
         'nav.location': 'SAMSUN / 41.02° N',
 
         // Hero
-        'hero.status': 'Computer Engineering Graduate',
-        'hero.title': 'Turning\nSimplicity into Code.',
-        'hero.desc': 'With a pragmatic, functionality-focused approach; I develop engineering solutions from proactive systems like GeoIntel to signal processing algorithms.',
+        'hero.status': 'Computer Engineer',
+        'hero.title': 'End-to-end\nengineering.',
+        'hero.desc': 'I turn data into decisions and ideas into products. From AI systems like GeoIntel to mobile apps, I build end-to-end with clean, scalable code.',
         'hero.projects': 'Projects',
 
         // Mode labels

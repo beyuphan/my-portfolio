@@ -1,8 +1,10 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { projects } from '../data/projects';
 
 const Hero = () => {
   const { t } = useApp();
+  const titleLines = t('hero.title').split('\n');
 
   return (
     <section className="relative pt-32 pb-20 px-6 overflow-hidden">
@@ -15,7 +17,11 @@ const Hero = () => {
         <div className="reveal" style={{ animationDelay: '0.2s' }}>
           <span className="mono-detail block mb-6">{t('hero.status')}</span>
           <h1 className="hero-title mb-8" style={{ lineHeight: '1.2' }}>
-            {t('hero.title')}
+            {titleLines.map((line, i) => (
+              <React.Fragment key={i}>
+                {line}{i < titleLines.length - 1 && <br />}
+              </React.Fragment>
+            ))}
           </h1>
         </div>
 
@@ -25,7 +31,7 @@ const Hero = () => {
           </p>
           <div className="flex gap-4 border-l border-gray-200 pl-6 h-fit">
             <div className="text-left">
-              <span className="block text-2xl font-bold">8+</span>
+              <span className="block text-2xl font-bold">{projects.length}+</span>
               <span className="mono-detail">{t('hero.projects')}</span>
             </div>
           </div>
