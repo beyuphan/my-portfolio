@@ -104,16 +104,7 @@ const HRAgent = () => {
           <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div className="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="mono-detail text-[10px] text-gray-400 hidden sm:inline">hr_session_{language}</span>
-          <button
-            aria-label="Kapat"
-            onClick={() => setIsOpen(false)}
-            className="text-gray-400 hover:text-white text-xl leading-none px-1 -mr-1"
-          >
-            ✕
-          </button>
-        </div>
+        <span className="mono-detail text-[10px] text-gray-400">hr_session_{language}</span>
       </div>
 
       {/* Terminal Body */}
