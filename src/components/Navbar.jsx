@@ -8,6 +8,9 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const cvFile = language === 'tr'
+    ? '/cv/EyuphanBinici_CV_TR.pdf'
+    : '/cv/EyuphanBinici_CV_EN.pdf';
 
   const modes = [
     { id: 'technical', label: t('mode.technical'), icon: '⚙️' },
@@ -112,6 +115,14 @@ const Navbar = () => {
             {language === 'tr' ? '🇹🇷 TR' : '🇬🇧 EN'}
           </button>
 
+          <a
+            href={cvFile}
+            download
+            className="px-3 py-2 rounded-md text-xs font-mono bg-[#1d1d1f] text-white hover:bg-blue-600 transition-colors hidden sm:inline-flex items-center gap-1"
+          >
+            CV ↓
+          </a>
+
           <div className="h-4 w-[1px] bg-gray-200 hidden sm:block"></div>
 
           <a href="https://github.com/beyuphan" target="_blank" rel="noreferrer" className="nav-link text-black font-black underline decoration-gray-200 decoration-2 underline-offset-4 hidden sm:inline">
@@ -154,6 +165,14 @@ const Navbar = () => {
             className="nav-link text-black text-base"
           >
             GitHub
+          </a>
+          <a
+            href={cvFile}
+            download
+            onClick={() => setMenuOpen(false)}
+            className="inline-flex items-center gap-1 bg-[#1d1d1f] text-white text-sm font-bold px-4 py-2 rounded-md w-fit"
+          >
+            {t('cv.download')} ↓
           </a>
         </div>
       )}

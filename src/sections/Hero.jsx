@@ -3,8 +3,11 @@ import { useApp } from '../context/AppContext';
 import { projects } from '../data/projects';
 
 const Hero = () => {
-  const { t } = useApp();
+  const { t, language } = useApp();
   const titleLines = t('hero.title').split('\n');
+  const cvFile = language === 'tr'
+    ? '/cv/EyuphanBinici_CV_TR.pdf'
+    : '/cv/EyuphanBinici_CV_EN.pdf';
 
   return (
     <section className="relative pt-32 pb-20 px-6 overflow-hidden">
@@ -35,6 +38,17 @@ const Hero = () => {
               <span className="mono-detail">{t('hero.projects')}</span>
             </div>
           </div>
+        </div>
+
+        <div className="mt-12 reveal" style={{ animationDelay: '0.6s' }}>
+          <a
+            href={cvFile}
+            download
+            className="inline-flex items-center gap-3 bg-[#1d1d1f] text-white text-sm font-bold tracking-wide px-6 py-3 rounded-full hover:bg-blue-600 transition-colors duration-300"
+          >
+            {t('cv.download')}
+            <span className="text-base">↓</span>
+          </a>
         </div>
       </div>
     </section>

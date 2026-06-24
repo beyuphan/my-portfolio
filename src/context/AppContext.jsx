@@ -43,6 +43,7 @@ export const AppProvider = ({ children }) => {
         'hero.title': 'Uçtan uca\nmühendislik.',
         'hero.desc': 'Veriyi karara, fikri ürüne dönüştürüyorum. GeoIntel gibi yapay zekâ sistemlerinden mobil uygulamalara kadar; uçtan uca, temiz ve ölçeklenebilir kodla inşa ediyorum.',
         'hero.projects': 'Proje',
+        'cv.download': 'CV İndir',
 
         // Mode labels
         'mode.normal': 'Normal',
@@ -148,6 +149,7 @@ export const AppProvider = ({ children }) => {
         'hero.title': 'End-to-end\nengineering.',
         'hero.desc': 'I turn data into decisions and ideas into products. From AI systems like GeoIntel to mobile apps, I build end-to-end with clean, scalable code.',
         'hero.projects': 'Projects',
+        'cv.download': 'Download CV',
 
         // Mode labels
         'mode.normal': 'Normal',
