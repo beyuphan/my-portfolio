@@ -92,22 +92,32 @@ const HRAgent = () => {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 w-[350px] sm:w-[420px] bg-[#1d1d1f] rounded-xl shadow-2xl overflow-hidden flex flex-col z-50 border border-gray-800 max-h-[640px]">
+    <div className="fixed z-50 bottom-4 right-4 left-4 sm:left-auto sm:right-8 sm:bottom-8 sm:w-[420px] bg-[#1d1d1f] rounded-xl shadow-2xl overflow-hidden flex flex-col border border-gray-800 max-h-[85vh] sm:max-h-[640px]">
       {/* Terminal Header */}
       <div className="bg-[#2d2d2f] px-4 py-3 flex justify-between items-center border-b border-gray-800">
         <div className="flex gap-2">
-          <div
-            className="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:bg-red-600"
+          <button
+            aria-label="Kapat"
             onClick={() => setIsOpen(false)}
-          ></div>
+            className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600"
+          ></button>
           <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div className="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
-        <span className="mono-detail text-[10px] text-gray-400">hr_session_{language}</span>
+        <div className="flex items-center gap-3">
+          <span className="mono-detail text-[10px] text-gray-400 hidden sm:inline">hr_session_{language}</span>
+          <button
+            aria-label="Kapat"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-400 hover:text-white text-xl leading-none px-1 -mr-1"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       {/* Terminal Body */}
-      <div className="p-5 h-[300px] overflow-y-auto flex flex-col gap-3 text-xs sm:text-sm font-mono bg-[#0f0f11]">
+      <div className="p-5 flex-1 min-h-[150px] max-h-[50vh] overflow-y-auto flex flex-col gap-3 text-xs sm:text-sm font-mono bg-[#0f0f11]">
         {logs.map((log, index) => (
           <div
             key={index}
