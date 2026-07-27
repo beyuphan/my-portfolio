@@ -8,7 +8,7 @@ Kişisel portfolyo sitesi. React 19 + Vite + Tailwind CSS 4 ile geliştirildi.
 
 - **İki dilli (TR/EN)** — `AppContext` üzerinden `t()` (UI metinleri) ve `L()` (içerik) ile tam çeviri
 - **Üç görüntüleme modu** — Normal / İK (HR) / Teknik; proje kartları moda göre render edilir
-- **8 detaylı proje** — her biri için problem → çözüm → mühendislik notu → teknik akış → çıktılar
+- **12 detaylı proje** — her biri için problem → çözüm → mühendislik notu → teknik akış → çıktılar
 - **Canlı AI HR Asistanı** — `hr-backend` (Gemini) ile Eyüphan'ın ağzından (birinci şahıs) cevap veren mülakat sohbeti
 - KaTeX matematik gösterimi, "System Logs" (fail-fast) anlatımı, mobil uyumlu
 

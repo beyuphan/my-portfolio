@@ -54,6 +54,11 @@ const ProjectDetail = () => {
           <span className="mono-detail text-blue-600 font-bold">{L(project.category)}</span>
           {role && <span className="mono-detail text-gray-400">// {role}</span>}
           {project.year && <span className="mono-detail text-gray-400">// {project.year}</span>}
+          {project.award && (
+            <span className="mono-detail text-[9px] bg-amber-100 text-amber-700 px-2 py-1 rounded">
+              {L(project.award)}
+            </span>
+          )}
         </div>
         <h1 className="hero-title mb-10 text-6xl md:text-8xl lg:text-9xl leading-[0.85] tracking-tighter">
           {project.title}

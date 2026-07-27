@@ -8,6 +8,7 @@ const ProjectCard = ({ project }) => {
   const category = L(project.category);
   const description = L(project.description);
   const role = L(project.role);
+  const award = L(project.award);
   const impact = L(project.impact);
   const highlights = L(project.technicalDetails?.highlights);
   const problem = L(project.technicalDetails?.problem);
@@ -16,11 +17,18 @@ const ProjectCard = ({ project }) => {
   if (mode === 'hr') {
     return (
       <div className="project-card group bg-gradient-to-br from-blue-50 to-white">
-        <div className="flex justify-between items-start mb-4">
-          <span className="mono-detail text-[9px] bg-blue-100 text-blue-700 px-2 py-1 rounded">
-            {category}
-          </span>
-          <span className="text-xs font-semibold text-green-600">📊 {project.tags.length} {t('card.skills')}</span>
+        <div className="flex justify-between items-start mb-4 gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="mono-detail text-[9px] bg-blue-100 text-blue-700 px-2 py-1 rounded">
+              {category}
+            </span>
+            {award && (
+              <span className="mono-detail text-[9px] bg-amber-100 text-amber-700 px-2 py-1 rounded">
+                {award}
+              </span>
+            )}
+          </div>
+          <span className="text-xs font-semibold text-green-600 whitespace-nowrap">📊 {project.tags.length} {t('card.skills')}</span>
         </div>
 
         <Link to={`/project/${project.id}`}>
@@ -74,9 +82,12 @@ const ProjectCard = ({ project }) => {
   // Varsayılan: Teknik (detaylı) görünüm — problem özeti, etiketler, teknik doküman + linkler.
   return (
     <div className="project-card group bg-gray-900 text-white border border-gray-800">
-      <div className="flex justify-between items-start mb-4">
-        <span className="mono-detail text-[9px] text-gray-400">{category}</span>
-        <span className="text-[9px] text-green-400 font-mono">{project.year || `v${project.id}`}</span>
+      <div className="flex justify-between items-start mb-4 gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mono-detail text-[9px] text-gray-400">{category}</span>
+          {award && <span className="mono-detail text-[9px] text-amber-400">{award}</span>}
+        </div>
+        <span className="text-[9px] text-green-400 font-mono whitespace-nowrap">{project.year || `v${project.id}`}</span>
       </div>
 
       <Link to={`/project/${project.id}`}>

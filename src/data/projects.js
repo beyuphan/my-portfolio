@@ -1,5 +1,5 @@
 // Çevrilebilir alanlar { tr, en } objesidir; bileşenler useApp().L() ile dili seçer.
-// Mod alanları: role/impact (İK), architecture/algorithms (Teknik). link/demoLink opsiyoneldir.
+// Mod alanları: role/impact (İK), architecture/algorithms (Teknik). link/demoLink/award opsiyoneldir.
 export const projects = [
   {
     id: 1,
@@ -73,11 +73,89 @@ export const projects = [
     }
   },
   {
+    id: 12,
+    title: "Moka Agent Wallet",
+    category: { tr: "Yapay Zeka & Fintech", en: "AI & Fintech" },
+    year: "2026",
+    role: { tr: "Full-Stack & Backend Mühendisi", en: "Full-Stack & Backend Engineer" },
+    award: { tr: "🏆 Hackathon Finalisti", en: "🏆 Hackathon Finalist" },
+    description: {
+      tr: "Yapay zeka ajanlarının şirket adına güvenle para harcamasını sağlayan ödeme yetkilendirme platformu. Patron doğal dilde kural koyar, kurallar kriptografik yetki belgesine (mandate) dönüşür; her ödeme imza, kural motoru ve AI risk bekçisinden geçip değişmez deftere yazılır.",
+      en: "A payment authorization platform that lets AI agents spend company money safely. A manager sets rules in natural language, which compile into cryptographic mandates; every payment passes signature checks, a rule engine, and an AI risk warden before landing in an immutable ledger."
+    },
+    tags: ["NestJS", "Prisma", "PostgreSQL", "Redis", "React", "TypeScript", "Ed25519", "JWS", "Claude API", "Docker", "SSE"],
+    link: "https://github.com/beyuphan/Moka-Agent-Wallet",
+    demoLink: "https://moka-2839.onrender.com/",
+    impact: {
+      tr: [
+        "AI ajanına ham kart bilgisi verilmez; sadece kapsamı ve süresi sınırlı kriptografik token verilir.",
+        "\"Teknolojiye ayda en fazla 50.000 TL harca\" gibi doğal dil kuralı, yapılandırılmış yetki belgesine dönüşür.",
+        "Reddedilen ve onaylanan her işlem silinemez denetim defterine yazılır; patron için tam şeffaflık."
+      ],
+      en: [
+        "The AI agent never receives raw card data — only a cryptographic token limited in scope and lifetime.",
+        "A natural-language rule like \"spend up to 50,000 TL on technology this month\" compiles into a structured mandate.",
+        "Every approved and rejected transaction is written to a tamper-proof audit ledger, giving the manager full transparency."
+      ]
+    },
+    architecture: {
+      tr: "NestJS 11 + Prisma 7 + PostgreSQL 16 backend, Redis ile idempotency/nonce saklama; React 19 (Vite) + Tailwind v4 + shadcn/ui yönetim paneli; risk analizi için Anthropic Claude (erişilemezse deterministik mock'a düşer); tüm stack Docker Compose ile ayağa kalkar. Tek giriş noktası POST /api/authorize; canlı defter akışı Server-Sent Events ile panele basılır.",
+      en: "A NestJS 11 + Prisma 7 + PostgreSQL 16 backend with Redis for idempotency/nonce storage; a React 19 (Vite) + Tailwind v4 + shadcn/ui admin panel; Anthropic Claude for risk analysis (falling back to a deterministic mock when unavailable); the whole stack boots via Docker Compose. A single entry point, POST /api/authorize, and a live ledger stream pushed to the panel over Server-Sent Events."
+    },
+    algorithms: {
+      tr: [
+        "Yetkilendirme hattı: idempotency → Ed25519 imza + replay doğrulama → scoped token → kural motoru → AI risk bekçisi → ödeme ağı → deftere yazım",
+        "Ed25519 / JWS imza doğrulaması; nonce ile 60 saniyelik replay penceresi koruması",
+        "Scoped token yalnızca ilgili mandate'e bağlıdır; harcama kararı her zaman sunucudaki mandate kaydından üretilir",
+        "Hash zinciri: hash(n) = H(hash(n-1) ‖ payload); GET /ledger/verify zinciri genesis'ten bugüne doğrular",
+        "PostgreSQL trigger ile append-only defter (UPDATE/DELETE/TRUNCATE engellenir)",
+        "SELECT ... FOR UPDATE ile mandate satır kilidi — eşzamanlı taleplerde limit aşımı yarış koşulu engellenir",
+        "Çift katmanlı idempotency: nonce (replay) + Idempotency-Key başlığı (ağ tekrarı)",
+        "LLM risk skorlaması LOW / MEDIUM / HIGH üretir; 3 sn timeout'ta deterministik mock'a düşerek kilitlenmeyi önler"
+      ],
+      en: [
+        "Authorization pipeline: idempotency → Ed25519 signature + replay check → scoped token → rule engine → AI risk warden → payment network → ledger write",
+        "Ed25519 / JWS signature verification; nonce-based 60-second replay protection window",
+        "Scoped tokens are bound to a single mandate; the spending decision always derives from the server-side mandate record",
+        "Hash chain: hash(n) = H(hash(n-1) ‖ payload); GET /ledger/verify validates the chain from genesis to present",
+        "Append-only ledger enforced by a PostgreSQL trigger (UPDATE/DELETE/TRUNCATE blocked)",
+        "SELECT ... FOR UPDATE row lock on the mandate — prevents concurrent requests from racing past the limit",
+        "Dual-layer idempotency: nonce (replay) + Idempotency-Key header (network retries)",
+        "LLM risk scoring returns LOW / MEDIUM / HIGH; a 3s timeout falls back to a deterministic mock so nothing deadlocks"
+      ]
+    },
+    technicalDetails: {
+      problem: {
+        tr: "Otonom AI ajanlarına ödeme yetkisi vermenin iki kötü seçeneği var: ya şirket kartını tamamen teslim etmek (ajan hacklenirse veya halüsinasyon görürse şirket batar), ya da her işlemde insana onay sordurmak (ajanın hızını ve otonomisini yok eder).",
+        en: "Delegating payment authority to autonomous AI agents leaves two bad options: hand over the company card entirely (one hack or hallucination and the company is drained), or ask a human to approve every transaction (killing the agent's speed and autonomy)."
+      },
+      solution: {
+        tr: "Ajan ile şirket kasası arasına duran bir denetim katmanı: doğal dil kuralları kriptografik yetki belgesine derlenir, ajan her talebi kendi özel anahtarıyla imzalar, sistem imzayı ve kuralları doğrular, AI davranış anomalisi arar ve karar ne olursa olsun hash-zincirli değişmez deftere yazılır.",
+        en: "A control layer sitting between the agent and the company treasury: natural-language rules compile into cryptographic mandates, the agent signs every request with its private key, the system verifies signature and rules, an AI looks for behavioral anomalies, and every decision — whatever it is — lands in a hash-linked immutable ledger."
+      },
+      engineeringNote: {
+        tr: "AI asla tek başına onay veremez; yalnızca işlemi durdurabilir (HIGH) veya insana eskalasyon yapabilir (MEDIUM). Böylece LLM'in halüsinasyonu para kaybına dönüşemez. Anthropic API erişilemezse sistem deterministik mock'a düşerek çalışmaya devam eder.",
+        en: "The AI can never approve on its own — it can only block a transaction (HIGH) or escalate to a human (MEDIUM), so an LLM hallucination can never turn into lost money. If the Anthropic API is unreachable, the system falls back to a deterministic mock and keeps running."
+      },
+      flow: [
+        { stepTitle: { tr: "Mandate Derleme", en: "Mandate Compilation" }, stepDesc: { tr: "Patronun doğal dilde yazdığı kural (limit, süre, kategori) LLM ile yapılandırılmış yetki belgesine çevrilir.", en: "The manager's natural-language rule (limit, window, category) is compiled by an LLM into a structured mandate record." } },
+        { stepTitle: { tr: "Kriptografik Doğrulama", en: "Cryptographic Verification" }, stepDesc: { tr: "Ajanın Ed25519 imzası, JWS scoped token'ı ve nonce'u doğrulanır; 60 sn'lik replay penceresi dışındaki talepler reddedilir.", en: "The agent's Ed25519 signature, JWS scoped token, and nonce are verified; requests outside the 60s replay window are rejected." } },
+        { stepTitle: { tr: "Kural Motoru + AI Bekçisi", en: "Rule Engine + AI Warden" }, stepDesc: { tr: "Limit, kategori ve süre kontrolü deterministik çalışır; ardından LLM davranış anomalisi arar (LOW / MEDIUM / HIGH).", en: "Limit, category, and validity checks run deterministically; then an LLM scans for behavioral anomalies (LOW / MEDIUM / HIGH)." } },
+        { stepTitle: { tr: "Hash-Zincirli Defter", en: "Hash-Linked Ledger" }, stepDesc: { tr: "Karar append-only deftere yazılır (DB trigger korumalı); SSE ile panele canlı akar, /ledger/verify zinciri doğrular.", en: "The decision is written to an append-only ledger (guarded by a DB trigger), streamed live to the panel over SSE, and validated by /ledger/verify." } }
+      ],
+      highlights: {
+        tr: ["Ed25519 İmza & Scoped Token", "Kural Motoru + AI Risk Bekçisi", "Hash-Zincirli Değişmez Defter", "Doğal Dilden Yetki Belgesi"],
+        en: ["Ed25519 Signatures & Scoped Tokens", "Rule Engine + AI Risk Warden", "Hash-Linked Immutable Ledger", "Natural Language to Mandate"]
+      }
+    }
+  },
+  {
     id: 2,
     title: "JulardzijaSmile",
     category: { tr: "Full-Stack Ekosistem", en: "Full-Stack Ecosystem" },
     year: "2025",
     role: { tr: "Full-Stack Mühendis", en: "Full-Stack Engineer" },
+    award: { tr: "🏆 Hackathon Finalisti", en: "🏆 Hackathon Finalist" },
     description: {
       tr: "Saç ekim süreçleri için 5 farklı açıdan görsel standardizasyon sağlayan, NestJS ve Flutter tabanlı uçtan uca klinik yönetim platformu.",
       en: "An end-to-end clinical management platform built with NestJS and Flutter that standardizes hair-transplant imaging from 5 different angles."
