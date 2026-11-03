@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, HttpException, HttpStatus } 
 import { Request } from 'express';
 
 /**
- * Basit in-memory rate limiter. Gemini kotasını ve spam'i korumak için
+ * Basit in-memory rate limiter. Groq kotasını ve spam'i korumak için
  * IP başına hem kısa pencere (spam) hem günlük limit uygular.
  * Tek instance için yeterli; çok-instance deploy'da Redis'e taşınmalı.
  */

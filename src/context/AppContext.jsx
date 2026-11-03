@@ -40,8 +40,8 @@ export const AppProvider = ({ children }) => {
 
         // Hero
         'hero.status': 'Bilgisayar Mühendisi',
-        'hero.title': 'Uçtan uca\nmühendislik.',
-        'hero.desc': 'Veriyi karara, fikri ürüne dönüştürüyorum. GeoIntel gibi yapay zekâ sistemlerinden mobil uygulamalara kadar; uçtan uca, temiz ve ölçeklenebilir kodla inşa ediyorum.',
+        'hero.title': 'Fikirden\nürüne.',
+        'hero.desc': 'Yapay zekâ ajanları, harita ve uydu verisi, mobil uygulamalar ve oyunlar geliştiriyorum. GeoIntel, Kıvılcım ve SimTrack gibi projelerimi aşağıda bulabilirsin.',
         'hero.projects': 'Proje',
         'cv.download': 'CV İndir',
 
@@ -72,16 +72,16 @@ export const AppProvider = ({ children }) => {
         'skills.title': 'Teknik\nYetkinlikler.',
 
         // About section
-        'about.label': 'Felsefe & Eğitim',
-        'about.title': 'Karmaşıklığı\nSadeleştirmek.',
-        'about.p1': 'Ondokuz Mayıs Üniversitesi Bilgisayar Mühendisliği mezunuyum. Yazılım geliştirme sürecine sadece kod yazmak olarak değil, bir mühendislik disiplini ve görsel bir anlatım olarak yaklaşıyorum.',
-        'about.p2': 'Anadolu Üniversitesi\'nde devam ettiğim Görsel İletişim eğitimi, teknik çözümlerimi kullanıcı odaklı bir estetikle harmanlamamı sağlıyor. Gereksiz detaylardan ve gösterişten kaçınan, işlevselliği merkeze alan bir tasarım anlayışına sahibim.',
+        'about.label': 'Hakkımda',
+        'about.title': 'Ben Kimim.',
+        'about.p1': 'Ondokuz Mayıs Üniversitesi Bilgisayar Mühendisliği mezunuyum. Backend, mobil ve yapay zekâ tarafında çalışıyorum; hackathonlarda ürünü baştan sona çıkarmayı seviyorum.',
+        'about.p2': 'Anadolu Üniversitesi\'nde Görsel İletişim okuyorum. Boş zamanlarımda oyun yapıyor, sinema ve simülasyon oyunlarıyla ilgileniyorum; bunlar arayüz ve ürün tasarlarken de işime yarıyor.',
         'about.university': 'Üniversite',
         'about.location': 'Konum',
         'about.focus': 'Odak',
         'about.interest': 'İlgi Alanı',
-        'about.focusVal': 'Mobil & AI',
-        'about.interestVal': 'Sinema Sanatları',
+        'about.focusVal': 'Backend, Mobil & AI',
+        'about.interestVal': 'Sinema & Oyun',
 
         // Contact section
         'contact.label': 'İletişime Geç',
@@ -146,8 +146,8 @@ export const AppProvider = ({ children }) => {
 
         // Hero
         'hero.status': 'Computer Engineer',
-        'hero.title': 'End-to-end\nengineering.',
-        'hero.desc': 'I turn data into decisions and ideas into products. From AI systems like GeoIntel to mobile apps, I build end-to-end with clean, scalable code.',
+        'hero.title': 'From idea\nto product.',
+        'hero.desc': 'I build AI agents, map and satellite data tools, mobile apps, and games. You can find projects like GeoIntel, Kıvılcım, and SimTrack below.',
         'hero.projects': 'Projects',
         'cv.download': 'Download CV',
 
@@ -178,16 +178,16 @@ export const AppProvider = ({ children }) => {
         'skills.title': 'Technical\nSkills.',
 
         // About section
-        'about.label': 'Philosophy & Education',
-        'about.title': 'Simplifying\nComplexity.',
-        'about.p1': 'I am a Computer Engineering graduate from Ondokuz Mayıs University. I approach software development not merely as writing code, but as an engineering discipline and a form of visual storytelling.',
-        'about.p2': 'My ongoing Visual Communication studies at Anadolu University let me blend technical solutions with user-focused aesthetics. I favor a design philosophy centered on functionality, avoiding unnecessary detail and ostentation.',
+        'about.label': 'About Me',
+        'about.title': 'Who I Am.',
+        'about.p1': 'I am a Computer Engineering graduate from Ondokuz Mayıs University. I work on backend, mobile, and AI, and I like taking a product from start to finish at hackathons.',
+        'about.p2': 'I am studying Visual Communication at Anadolu University. In my free time I make games and follow cinema and simulation games, which also help when I design interfaces and products.',
         'about.university': 'University',
         'about.location': 'Location',
         'about.focus': 'Focus',
         'about.interest': 'Interest',
-        'about.focusVal': 'Mobile & AI',
-        'about.interestVal': 'Cinematic Arts',
+        'about.focusVal': 'Backend, Mobile & AI',
+        'about.interestVal': 'Cinema & Games',
 
         // Contact section
         'contact.label': 'Get in Touch',

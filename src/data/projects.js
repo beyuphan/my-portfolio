@@ -150,6 +150,293 @@ export const projects = [
     }
   },
   {
+    id: 13,
+    title: "Kıvılcım",
+    category: { tr: "Uydu Verisi & Web", en: "Satellite Data & Web" },
+    year: "2026",
+    role: { tr: "Full-Stack Geliştirici", en: "Full-Stack Developer" },
+    description: {
+      tr: "NASA FIRMS uydu verisiyle Türkiye'deki orman yangını tespitlerini harita üzerinde gösteren izleme paneli. Her yer için yakındaki tespitleri, verinin ne kadar taze olduğunu ve yangın havası indeksini sunar; geçmiş yangınların öncesi/sonrası uydu görüntüsünü karşılaştırır.",
+      en: "A wildfire monitoring dashboard that shows fire detections across Turkey on a map using NASA FIRMS satellite data. For any place it lists nearby detections, how fresh the data is, and a fire-weather index, and compares before/after satellite imagery of past fires."
+    },
+    tags: ["Python", "FastAPI", "SQLAlchemy", "SQLite", "Leaflet", "NASA FIRMS", "Open-Meteo", "Telegram Bot", "Docker"],
+    link: "https://github.com/beyuphan/kivilcim",
+    impact: {
+      tr: [
+        "\"Yakınımda yangın var mı?\" sorusuna Türkçe, sade bir cevap verir; uydunun neyi göremeyeceğini de açıkça söyler.",
+        "Telegram botu ile seçilen konumun 3-50 km çevresinde yeni yangın görülünce mesaj gönderir (hesap yok, /durdur ile veri silinir).",
+        "2016'ya kadar uzanan arşivden geçmiş yangınların öncesi/sonrası görüntüsünü ve gün gün yayılımını gösterir."
+      ],
+      en: [
+        "Answers \"is there a fire near me?\" in plain Turkish and states clearly what the satellites cannot see.",
+        "A Telegram bot messages you when a new fire appears 3–50 km from a chosen location (no accounts; /durdur deletes your data).",
+        "Shows before/after imagery and day-by-day spread of past fires from an archive reaching back to 2016."
+      ]
+    },
+    architecture: {
+      tr: "Python 3.11 + FastAPI + SQLAlchemy (SQLite) tek süreçte hem siteyi hem 30 dakikalık veri çekme zamanlayıcısını çalıştırır. Harita Leaflet ile, uydu katmanları NASA GIBS (Sentinel-2/Landsat/VIIRS) ile, hava verisi Open-Meteo ile gelir. PWA olarak kurulabilir; salt-okunur ücretsiz bir API ve 81 il için SEO sayfaları sunar. Docker ve CI ile yayına hazırdır.",
+      en: "Python 3.11 + FastAPI + SQLAlchemy (SQLite) runs both the site and a 30-minute ingest scheduler in a single process. The map uses Leaflet, satellite layers come from NASA GIBS (Sentinel-2/Landsat/VIIRS), and weather from Open-Meteo. It installs as a PWA, exposes a free read-only API, and serves SEO pages for all 81 provinces. Ready to ship with Docker and CI."
+    },
+    algorithms: {
+      tr: [
+        "Tespitleri yere göre gruplayıp ısı gücüne göre boyutlandırma; düşük güvenli ve neredeyse her gün tespit veren noktalar (fabrika, rafineri, çöplük) boş halka olarak ayrı gösterilir",
+        "Hava indeksi: nem, rüzgâr ve son 72 saatlik yağışın sıcaklıkla ölçeklenmiş skoru; geçmiş tespitlere karşı ölçüldü (AUC ≈ 0.7), yayılım tahmini olarak sunulmaz",
+        "Uydu geçiş modeli: herkese açık yörünge verisinden tarama zamanlarının tahmini; 600 tespitin %99'u modellenen şeridin içine düştü",
+        "Rüzgâr geometrisi: en yakın tespit ile konum arasında rüzgârın yönü (yangından sana / çapraz / uzağa) hesabı",
+        "Olay çıkarımı: arşivdeki tespitlerden geçmiş yangınları bulup saklama, her 375 m piksel ilk göründüğü günde çizilerek gün gün yayılım oynatıcısı",
+        "Öncesi/sonrası karşılaştırma: bulutsuz gün seçimi ile 30 m Sentinel-2/Landsat görüntüleri, kaynak ve bulut oranıyla etiketli"
+      ],
+      en: [
+        "Groups detections by place and sizes them by heat power; low-confidence and near-daily detections (factories, refineries, landfills) are drawn separately as hollow rings",
+        "Weather index: humidity, wind, and 72 h of rain scaled by temperature; measured against past detections (AUC ≈ 0.7) and never presented as a spread forecast",
+        "Satellite pass model: scan times predicted from public orbit data; 99% of 600 detections fell inside the modeled swath",
+        "Wind geometry: compares wind direction with the nearest detection (fire toward you / across / away)",
+        "Event extraction: finds past fires in the archive and stores them; each 375 m pixel is drawn on the day it first appears for a day-by-day spread player",
+        "Before/after comparison: cloud-free day selection with 30 m Sentinel-2/Landsat imagery, labeled with source and cloud cover"
+      ]
+    },
+    technicalDetails: {
+      problem: {
+        tr: "NASA FIRMS aynı tespitleri ham noktalar ve İngilizce terimlerle gösteriyor; orman idaresinin araçları ise itfaiyeciler için yapılmış. Köyde, tarlada ya da tatilde yaşayan biri için sade ve dürüst bir cevap yok.",
+        en: "NASA FIRMS shows the same detections as raw dots with English terms, and forestry tools are made for firefighters. Someone living, farming, or holidaying near wooded land has no plain, honest answer."
+      },
+      solution: {
+        tr: "Tespitleri yere göre özetleyen, verinin tazeliğini ve uydunun o bölgeyi gerçekten tarayıp taramadığını gösteren Türkçe bir panel. Telegram uyarıları, paylaşılabilir yangın kartları ve yazdırılabilir rapor ekler.",
+        en: "A Turkish dashboard that summarizes detections by place and shows data freshness and whether a satellite actually scanned the area. It adds Telegram alerts, shareable fire cards, and a printable report."
+      },
+      engineeringNote: {
+        tr: "Sistem neyi bilmediğini söyler: iki zaman ayrı gösterilir (verinin çekilme zamanı ve uydunun gözlem zamanı), hava indeksi \"deneysel\" etiketlidir ve ölçüm sonuçları /methodology sayfasında yayımlanır. Resmi bir uyarı sistemi değildir; acil durumda 112.",
+        en: "The system states what it does not know: two timestamps are shown separately (fetch time and satellite observation time), the weather index is labeled experimental, and measurement results are published at /methodology. It is not an official warning system; in an emergency call 112."
+      },
+      flow: [
+        { stepTitle: { tr: "Veri Çekme", en: "Ingest" }, stepDesc: { tr: "Zamanlayıcı her 30 dakikada NASA FIRMS tespitlerini çeker; bilgisayar kapalıyken kaçırılanları yakalar.", en: "A scheduler pulls NASA FIRMS detections every 30 minutes and catches up after downtime." } },
+        { stepTitle: { tr: "Zenginleştirme", en: "Enrichment" }, stepDesc: { tr: "Bölgeye göre gruplama, Open-Meteo hava verisi, rüzgâr geometrisi ve uydu tarama geçmişi eklenir.", en: "Grouping by region, Open-Meteo weather, wind geometry, and satellite scan history are added." } },
+        { stepTitle: { tr: "Harita & Arama", en: "Map & Search" }, stepDesc: { tr: "Leaflet haritasında il/ilçe araması, konumum ve paylaşılabilir bağlantılarla yakın tespitler gösterilir.", en: "Nearby detections are shown on a Leaflet map with province/district search, geolocation, and shareable links." } },
+        { stepTitle: { tr: "Uyarı & Rapor", en: "Alerts & Report" }, stepDesc: { tr: "Telegram bildirimi, yangın kartı (öncesi/sonrası) ve tek sayfalık yazdırılabilir rapor üretilir.", en: "Telegram notifications, before/after fire cards, and a one-page printable report are generated." } }
+      ],
+      highlights: {
+        tr: ["NASA FIRMS Uydu Verisi", "Öncesi/Sonrası Uydu Karşılaştırma", "Telegram Uyarı Botu", "Dürüst Belirsizlik Gösterimi"],
+        en: ["NASA FIRMS Satellite Data", "Before/After Satellite Comparison", "Telegram Alert Bot", "Honest Uncertainty Display"]
+      }
+    }
+  },
+  {
+    id: 14,
+    title: "Ash n Seed",
+    category: { tr: "Oyun Geliştirme", en: "Game Development" },
+    year: "2026",
+    role: { tr: "Oyun Geliştirici", en: "Game Developer" },
+    description: {
+      tr: "Belediye başkanı olarak otuz günde fabrika dumanıyla boğulan Karatepe'yi yeniden yeşertmeye çalıştığın, 2 boyutlu piksel sanatlı şehir yönetimi oyunu. COP31 Oyun Hackathonu için Godot ile geliştirildi.",
+      en: "A 2D pixel-art city management game where, as mayor, you have thirty days to make the smog-choked town of Karatepe green again. Built with Godot for the COP31 Game Hackathon."
+    },
+    tags: ["Godot 4", "GDScript", "Pixel Art", "Game Design", "Hackathon"],
+    link: "https://github.com/beyuphan/ash-n-seed",
+    demoLink: "https://beyuphan.itch.io/ashnseed",
+    impact: {
+      tr: [
+        "Her gün masa (karar kartları), saha (ağaç dikme, çöp toplama, bacalara filtre) ve gazete (kararların sonucu) olmak üzere üç parçadan oluşur.",
+        "Kelebek etkisi: bugünkü karar günler sonra geri döner (kömür dağıtırsan astım salgını, çöpü ormana yığarsan zehirli su).",
+        "Windows sürümü GitHub Releases'te, web sürümü itch.io'da yayında; Türkçe ve İngilizce tanıtım videosu hazırlandı."
+      ],
+      en: [
+        "Each day has three parts: the desk (decision cards), the field (planting trees, collecting litter, fitting chimney filters), and the newspaper (the consequences of your choices).",
+        "Butterfly effect: today's decision comes back days later (hand out coal and get an asthma outbreak; dump trash in the forest and get toxic water).",
+        "A Windows build is on GitHub Releases and a web build is on itch.io; Turkish and English trailers were produced."
+      ]
+    },
+    architecture: {
+      tr: "Godot 4 projesi; sahneler (intro, ana menü, oyun, arayüz) ve GDScript betikleri. Karakterler ve masa/saha görünümleri kodla çizilir (character_painter, desk_surface vb.); günlük raporlar, akşam gazetesi ve oyun sonu özetleri ayrı betiklerde. Windows ve web (HTML5) dışa aktarımı.",
+      en: "A Godot 4 project with scenes (intro, main menu, game, UI) and GDScript scripts. Characters and the desk/field views are drawn in code (character_painter, desk_surface, etc.); daily reports, the evening paper, and end-game summaries live in separate scripts. Exports to Windows and web (HTML5)."
+    },
+    algorithms: {
+      tr: [
+        "Kasa, Halk ve Çevre dengesini birlikte oynatan karar kartı sistemi",
+        "Gecikmeli sonuç (kelebek etkisi) mekaniği: kararlar sonraki günlerde olay olarak geri döner",
+        "Dört mini oyun: portakal yakalama, geri dönüşüm ayıklama, köstebek kovma, sıra hafızası",
+        "Günün olaylarından otomatik üretilen akşam gazetesi manşetleri",
+        "Sahne kodu ile prosedürel karakter ve ortam çizimi"
+      ],
+      en: [
+        "A decision-card system that moves Treasury, Public, and Environment balances together",
+        "A delayed-consequence (butterfly effect) mechanic: decisions return as events in later days",
+        "Four mini-games: catch oranges, sort recycling, chase moles, remember the sequence",
+        "Evening-newspaper headlines generated from the day's events",
+        "Procedural character and environment drawing in code"
+      ]
+    },
+    technicalDetails: {
+      problem: {
+        tr: "İklim ve çevre temasını, ders verir gibi değil oynarken hissettiren bir oyuna çevirmek; hackathon süresinde oynanabilir ve cilalı bir bütün çıkarmak.",
+        en: "Turning a climate and environment theme into something players feel while playing rather than a lecture, and shipping a playable, polished whole within a hackathon."
+      },
+      solution: {
+        tr: "Seçimlerin hem bugünü hem yarını etkilediği otuz günlük bir döngü; mizahi gazete diliyle sonuçları göstermek ve mini oyunlarla sahaya çeşitlilik katmak.",
+        en: "A thirty-day loop where choices affect both today and tomorrow, with a humorous newspaper voice to surface consequences and mini-games to vary the field gameplay."
+      },
+      engineeringNote: {
+        tr: "Windows sürümü en yüksek performansı verir; web sürümü tarayıcı sınırları yüzünden daha düşük performansla çalışır. Üçüncü taraf içeriklerin kaynakları ve lisansları CREDITS.md dosyasında tutulur.",
+        en: "The Windows build runs best; the web build is slower because of browser limits. Third-party assets and their licenses are tracked in CREDITS.md."
+      },
+      flow: [
+        { stepTitle: { tr: "Masa", en: "Desk" }, stepDesc: { tr: "Karar kartları gelir; her seçim Kasa, Halk ve Çevre dengesini oynatır.", en: "Decision cards arrive; each choice shifts the Treasury, Public, and Environment balance." } },
+        { stepTitle: { tr: "Saha", en: "Field" }, stepDesc: { tr: "Haritada ağaç dikilir, çöp toplanır, bacalara filtre takılır, komşuların istekleri mini oyunlarla çözülür.", en: "Plant trees, collect litter, fit chimney filters, and solve neighbors' requests through mini-games." } },
+        { stepTitle: { tr: "Gazete", en: "Newspaper" }, stepDesc: { tr: "Akşam Karatepe Postası kararların sonucunu manşetle gösterir.", en: "In the evening, the Karatepe Post headlines the consequences of your decisions." } },
+        { stepTitle: { tr: "Kelebek Etkisi", en: "Butterfly Effect" }, stepDesc: { tr: "Eski kararlar günler sonra yeni olaylar olarak geri döner.", en: "Earlier decisions return days later as new events." } }
+      ],
+      highlights: {
+        tr: ["Godot 4 ile 2D Piksel Oyun", "Kelebek Etkisi Mekaniği", "4 Mini Oyun", "Windows + Web Yayını"],
+        en: ["2D Pixel Game in Godot 4", "Butterfly-Effect Mechanic", "4 Mini-Games", "Windows + Web Release"]
+      }
+    }
+  },
+  {
+    id: 15,
+    title: "SimTrack",
+    category: { tr: "Masaüstü & Bilgisayarlı Görü", en: "Desktop & Computer Vision" },
+    year: "2026",
+    role: { tr: "Geliştirici", en: "Developer" },
+    description: {
+      tr: "Web kamerasıyla kafa takibi: IR şapka yok, reflektör yok. Başlat'a bas, oyunu aç. Kafanın duruşunu hesaplayıp Euro Truck Simulator 2, American Truck Simulator, MSFS, DCS gibi TrackIR/FreeTrack destekleyen oyunlara iletir.",
+      en: "Head tracking with a plain webcam: no IR clip, no reflector. Press Start and play. It computes head pose and feeds TrackIR/FreeTrack-compatible games such as Euro Truck Simulator 2, American Truck Simulator, MSFS, and DCS."
+    },
+    tags: ["Rust", "Tauri 2", "React", "TypeScript", "ONNX Runtime", "Computer Vision", "Windows"],
+    link: "https://github.com/beyuphan/simtrack",
+    impact: {
+      tr: [
+        "Pahalı TrackIR donanımı ve karmaşık opentrack ayarı yerine tek düğmeli, ücretsiz bir alternatif sunar.",
+        "ETS2 ve ATS'de kafa takibi ayarı kapalıysa yedek alarak kendisi açar; oyun bağlanınca adını arayüzde gösterir.",
+        "Tek dosyalık SimTrack.exe, kurulum sihirbazı ve MSI paketiyle MIT lisanslı açık kaynak olarak yayınlandı."
+      ],
+      en: [
+        "Offers a free, one-button alternative to costly TrackIR hardware and fiddly opentrack setup.",
+        "Enables head tracking in ETS2 and ATS itself (with a backup) if it is off, and shows the connected game's name in the UI.",
+        "Released as open source under MIT with a single-file SimTrack.exe, an installer, and an MSI package."
+      ]
+    },
+    architecture: {
+      tr: "Tauri 2 uygulaması: React + Vite + TypeScript arayüzü, Rust çekirdeği. Kamera Windows Media Foundation (nokhwa) ile okunur, iki ONNX modeli ONNX Runtime ile çalışır, sonuç 120 Hz motor döngüsünde filtrelenip FreeTrack paylaşımlı belleğine yazılır. Modeller ilk açılışta (~190 MB) doğrulamalı indirilir.",
+      en: "A Tauri 2 app: a React + Vite + TypeScript UI with a Rust core. The camera is read via Windows Media Foundation (nokhwa), two ONNX models run on ONNX Runtime, and the result is filtered in a 120 Hz engine loop and written to FreeTrack shared memory. Models (~190 MB) are downloaded and verified on first launch."
+    },
+    algorithms: {
+      tr: [
+        "İki aşamalı ONNX hattı: head-localizer yüzü bulur, head-pose kırpılmış yüzden dönme (kuaterniyon) ve konum/boyut çıkarır; kare başına ~10 ms",
+        "One-Euro (hıza duyarlı) filtre: kafa dururken pürüzsüz, hızlı dönerken tepkili",
+        "Ölü bölge, eğri ve hassasiyet eşlemesi: küçük hareketler oyuna geçmez, görüntü titremez",
+        "Histogram genişletme + gama ile düşük ışıkta kamera parlaklığı düzeltme",
+        "FT_SharedMem paylaşımlı belleğine yazım; NPClient64/freetrackclient64 DLL yollarını takip süresince kayıt defterine kaydedip durunca eski değerleri geri yükleme"
+      ],
+      en: [
+        "A two-stage ONNX pipeline: head-localizer finds the face, head-pose outputs rotation (quaternion) and position/size from the cropped face; ~10 ms per frame",
+        "One-Euro (speed-adaptive) filter: smooth when the head is still, responsive during fast turns",
+        "Dead zone, response curve, and sensitivity mapping: small movements don't reach the game, so the view doesn't jitter",
+        "Histogram stretching + gamma to correct camera brightness in low light",
+        "Writes to FT_SharedMem shared memory; registers NPClient64/freetrackclient64 DLL paths in the registry while tracking and restores the previous values on stop"
+      ]
+    },
+    technicalDetails: {
+      problem: {
+        tr: "Simülasyon oyunlarında kafa takibi için iki seçenek var: iyi çalışan ama pahalı TrackIR donanımı ya da ücretsiz ama arayüzü karmaşık, ince ayarı zahmetli opentrack.",
+        en: "Head tracking in sim games has two options: TrackIR, which works well but is expensive, or opentrack, which is free but has a complex UI and tedious tuning."
+      },
+      solution: {
+        tr: "opentrack'in sinir ağı modellerini Rust'a taşıyan, akıllı varsayılanlara sahip tek bir küçük program: Başlat'a basılır, oyuna otomatik bağlanır.",
+        en: "A single small program that ports opentrack's neural-network models to Rust, with smart defaults: press Start and it connects to the game automatically."
+      },
+      engineeringNote: {
+        tr: "Oyunlar TrackIR verisini UDP'den değil, kendi süreçlerine yükledikleri DLL üzerinden paylaşımlı bellekten okur. Bu yüzden SimTrack kayıt defterini yalnızca takip çalışırken değiştirir ve durunca önceki TrackIR/opentrack yolunu geri yazar. Kamera görüntüsü cihazdan çıkmaz.",
+        en: "Games read TrackIR data from shared memory through a DLL loaded into their own process, not over UDP. So SimTrack modifies the registry only while tracking runs and restores any previous TrackIR/opentrack path on stop. Camera frames never leave the device."
+      },
+      flow: [
+        { stepTitle: { tr: "Kamera", en: "Camera" }, stepDesc: { tr: "Windows Media Foundation ile 640×480 kare okunur, parlaklık düzeltilir.", en: "640×480 frames are read via Windows Media Foundation and brightness is corrected." } },
+        { stepTitle: { tr: "Yüz & Duruş", en: "Face & Pose" }, stepDesc: { tr: "ONNX Runtime ile yüz bulunur, kırpılmış yüzden dönme ve konum çıkarılır.", en: "ONNX Runtime locates the face and extracts rotation and position from the crop." } },
+        { stepTitle: { tr: "Filtre & Eşleme", en: "Filter & Mapping" }, stepDesc: { tr: "One-Euro filtre, ölü bölge ve eğri uygulanır (120 Hz).", en: "A One-Euro filter, dead zone, and curve are applied (120 Hz)." } },
+        { stepTitle: { tr: "Oyuna Çıkış", en: "Game Output" }, stepDesc: { tr: "Sonuç FreeTrack paylaşımlı belleğine yazılır, oyun DLL üzerinden okur.", en: "The result is written to FreeTrack shared memory and the game reads it via the DLL." } }
+      ],
+      highlights: {
+        tr: ["Rust + Tauri 2", "ONNX ile Gerçek Zamanlı Duruş Tahmini", "TrackIR / FreeTrack Uyumu", "MIT Lisanslı Açık Kaynak"],
+        en: ["Rust + Tauri 2", "Real-Time Pose Estimation with ONNX", "TrackIR / FreeTrack Compatible", "MIT-Licensed Open Source"]
+      }
+    }
+  },
+  {
+    id: 16,
+    title: "Mısra",
+    category: { tr: "Full-Stack / Mobil Web (PWA)", en: "Full-Stack / Mobile Web (PWA)" },
+    year: "2026",
+    role: { tr: "Full-Stack Geliştirici", en: "Full-Stack Developer" },
+    description: {
+      tr: "Her gün iki kez bir şiir sunan, mısra mısra yıldızlanabilen, listelenebilen ve paylaşılabilen sosyal şiir uygulaması. Şiirleri yapay zekâ seçer, YouTube'dan okuma videosu bulur ve abonelere web push ile gönderir.",
+      en: "A social poetry app that serves a poem twice a day, where readers star, list, and share individual lines. AI picks the poems, finds a reading on YouTube, and sends them to subscribers via web push."
+    },
+    tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Supabase", "PostgreSQL", "Deno Edge Functions", "pg_cron", "Groq", "YouTube Data API", "Web Push", "PWA", "Remotion"],
+    impact: {
+      tr: [
+        "Sabah ve akşam olmak üzere günde iki şiiri otomatik seçip yayınlar; şiir, okuma videosu ve bildirim insan müdahalesi olmadan hazırlanır.",
+        "Okuyucular sadece şiiri değil tek bir mısrayı yıldızlar, vurgular, karta çevirip paylaşır; profil, takip, liste ve yorum sistemiyle sosyal bir okuma topluluğu kurar.",
+        "Eksik kalan gün olmasın diye teslimat kayıtları, kilitler ve Telegram alarmı ile güvenilirliği izlenir.",
+        "Instagram ve Reels için Remotion ile otomatik üretilen \"Şair Dosyası\" carousel'leri ve \"Divan'dan DM'e\" videolarıyla büyüme planı koda bağlanmıştır."
+      ],
+      en: [
+        "Automatically picks and publishes two poems a day (morning and evening); the poem, a reading video, and the notification are prepared without human intervention.",
+        "Readers star, highlight, turn into cards, and share single lines, not just whole poems; profiles, follows, lists, and comments make it a social reading community.",
+        "Delivery runs, locks, and Telegram alerts monitor reliability so no day is missed.",
+        "The growth plan for Instagram and Reels is wired into code: Remotion generates \"Poet File\" carousels and \"From Divan to DM\" videos."
+      ]
+    },
+    architecture: {
+      tr: "Next.js 16 (App Router) + React 19 + Tailwind v4 arayüzü, Supabase üzerinde PostgreSQL, Auth ve satır düzeyinde yetkilendirme. Günlük kürasyon bir Deno Supabase Edge Function'dır (daily-curation); pg_cron + pg_net ile tetiklenir, CRON_SECRET ile korunur. Groq LLM şiiri seçer, YouTube Data API v3 okuma videosunu bulur, web-push (VAPID) bildirimi gönderir. PWA olarak kurulur (service worker, manifest, çevrimdışı sayfa). 8 SQL migration ile şema: poems, notes, favorites, line_highlights, reading_log, delivery_runs, profiles, poem_stars, verse_stars, lists, list_items, follows, reports, poem_comments (+ sürümleri), push_subscriptions. Paylaşım kartları /api/card ile üretilir. Remotion tabanlı ayrı bir video/ projesi sosyal medya içeriği üretir.",
+      en: "A Next.js 16 (App Router) + React 19 + Tailwind v4 frontend on Supabase for PostgreSQL, Auth, and row-level authorization. Daily curation is a Deno Supabase Edge Function (daily-curation) triggered by pg_cron + pg_net and guarded by CRON_SECRET. A Groq LLM picks the poem, the YouTube Data API v3 finds a reading, and web-push (VAPID) sends the notification. It installs as a PWA (service worker, manifest, offline page). The schema spans 8 SQL migrations: poems, notes, favorites, line_highlights, reading_log, delivery_runs, profiles, poem_stars, verse_stars, lists, list_items, follows, reports, poem_comments (+ versions), push_subscriptions. Share cards are rendered by /api/card. A separate Remotion-based video/ project produces social content."
+    },
+    algorithms: {
+      tr: [
+        "Çok adımlı LLM kürasyonu: önce yalnızca şair seçtirilir (modelin hafızasının güvenilir olduğu yer), sonra o şairin doğrulanmış şiir listesinden çoktan seçmeli bir şiir seçtirilir; açık uçlu üretimdeki uydurma başlık sorunu böyle çözüldü. İlk sürümdeki tek büyük tool-calling sohbeti Groq dakikalık token sınırına (TPM) takıldığı için terk edildi",
+        "YouTube eşleştirme: aramadan gelen adaylar süre filtresinden geçer; bir şiir okumasının makul süresini aşan videolar (belgesel, derleme) elenir, durma kelimeleriyle sorgular temizlenir",
+        "Teslimat güvenilirliği: sabah/akşam slotları, her slot için kürasyon ve push dakikaları (SCHEDULE), 360 dakikalık push penceresi, 90 dakika sonra \"geç başlık\" alarmı, delivery_runs tablosunda kilit (kürasyon için 4 dk, push için 5 dk) ve tek seferlik Telegram alarmı (alertOnce)",
+        "Yetkilendirme: Edge Function çağrısı ya service-role Bearer ya da x-cron-secret başlığıyla yapılabilir; cron_secret_auth migration'ı ile cron çağrısının yetkilendirmesi veritabanı tarafında kurulur",
+        "İstanbul saatine göre günün tarihi ve slot hesabı, yeniden denemelerde aynı şiiri iki kez yayınlamamak için served_date + slot tekilliği",
+        "Mısra düzeyinde etkileşim: verse_stars ve line_highlights ile tek dize yıldızlama/vurgulama, vurgulananlardan paylaşım kartı üretimi (2 kat çözünürlüklü PNG)",
+        "Yorumların düzenleme geçmişi poem_comment_versions tablosunda tutulur; reports tablosu ve moderasyon düğmeleri ile şikâyet akışı",
+        "Remotion ile 2160×2700 carousel (Şair Dosyası) ve 9:16 video üretimi, veri JSON'dan (sair-dosyasi.json) okunur"
+      ],
+      en: [
+        "Multi-step LLM curation: first only a poet is chosen (where the model's memory is reliable), then a poem is picked multiple-choice from that poet's verified poem list; this fixed the invented-title problem of open-ended generation. The first version, one long tool-calling chat, was dropped because it hit Groq's per-minute token limit (TPM)",
+        "YouTube matching: candidates from search go through a duration filter; videos exceeding a plausible length for a single poem reading (documentaries, compilations) are dropped, and queries are cleaned of stopwords",
+        "Delivery reliability: morning/evening slots, per-slot curate and push minutes (SCHEDULE), a 360-minute push window, a late-title alert after 90 minutes, locks in delivery_runs (4 min for curation, 5 min for push), and one-shot Telegram alerts (alertOnce)",
+        "Authorization: the Edge Function accepts either a service-role Bearer token or an x-cron-secret header; the cron_secret_auth migration sets up cron-call authorization on the database side",
+        "Day and slot computed in Istanbul time; uniqueness on served_date + slot prevents publishing the same poem twice on retries",
+        "Line-level engagement: verse_stars and line_highlights for starring/highlighting single lines, and share cards built from highlights (2x resolution PNG)",
+        "Comment edit history is kept in poem_comment_versions; a reports table and moderation buttons provide a reporting flow",
+        "Remotion renders 2160×2700 carousels (Poet File) and 9:16 videos from JSON data (sair-dosyasi.json)"
+      ]
+    },
+    technicalDetails: {
+      problem: {
+        tr: "Şiir uygulamaları ya statik bir arşivdir ya da sosyal medyada parçalanmış mısralar. Düzenli okuma alışkanlığı kuran, mısra düzeyinde etkileşimi olan ve kendi kendine içerik üretip büyüyebilen bir ürün yok. Tek kişilik ekip için de her gün elle şiir seçip bildirim atmak sürdürülebilir değil.",
+        en: "Poetry apps are either static archives or fragments scattered across social media. There is no product that builds a daily reading habit, supports line-level engagement, and can produce its own content to grow. For a one-person team, choosing a poem and sending a notification by hand every day is unsustainable."
+      },
+      solution: {
+        tr: "Günde iki kez çalışan otomatik bir kürasyon hattı (LLM ile şiir seçimi, YouTube okuma videosu, web push) ve üstünde mısra mısra yıldızlama, liste, takip, yorum, günlük ve arşiv takvimi sunan bir PWA. Aynı veriden sosyal medya kartları ve videoları üreten Remotion hattı büyümeyi besler.",
+        en: "An automated curation pipeline that runs twice a day (LLM poem selection, YouTube reading, web push) with a PWA on top offering line-by-line starring, lists, follows, comments, a journal, and an archive calendar. A Remotion pipeline turns the same data into social cards and videos to fuel growth."
+      },
+      engineeringNote: {
+        tr: "LLM'in en güvenilmez olduğu yer şiir başlığını ve metnini hatırlamak; bu yüzden modele serbest üretim yerine sınırlı bir listeden seçim yaptırıyorum. Bir otomasyonun asıl riski sessizce bozulmasıdır, bu yüzden her slot için kilit, süre penceresi ve tek seferlik alarm tuttum.",
+        en: "The LLM is least reliable at recalling poem titles and text, so instead of free generation I make it choose from a bounded list. The real risk of automation is silent failure, so every slot has a lock, a time window, and a one-shot alert."
+      },
+      flow: [
+        { stepTitle: { tr: "Zamanlama", en: "Scheduling" }, stepDesc: { tr: "pg_cron + pg_net, İstanbul saatine göre sabah ve akşam slotları için Edge Function'ı çağırır; çağrı CRON_SECRET ile yetkilendirilir.", en: "pg_cron + pg_net call the Edge Function for the morning and evening slots in Istanbul time; the call is authorized with CRON_SECRET." } },
+        { stepTitle: { tr: "Kürasyon", en: "Curation" }, stepDesc: { tr: "Groq LLM önce şairi, sonra şairin listesinden şiiri seçer; YouTube Data API ile süre filtreli okuma videosu bulunur ve poems tablosuna yazılır.", en: "A Groq LLM picks the poet, then a poem from that poet's list; the YouTube Data API finds a duration-filtered reading, and the result is written to the poems table." } },
+        { stepTitle: { tr: "Bildirim", en: "Notification" }, stepDesc: { tr: "VAPID ile web push tüm abonelere gönderilir; başarısızlıklar ve gecikmeler delivery_runs ve Telegram alarmıyla izlenir.", en: "Web push is sent to all subscribers via VAPID; failures and delays are tracked through delivery_runs and Telegram alerts." } },
+        { stepTitle: { tr: "Okuma & Etkileşim", en: "Reading & Engagement" }, stepDesc: { tr: "Okuyucu şiiri açar, mısra yıldızlar/vurgular, listeye ekler, not alır, yorum yazar; vurgulanan mısralar paylaşım kartına dönüşür.", en: "Readers open the poem, star or highlight lines, add to lists, take notes, and comment; highlighted lines become share cards." } },
+        { stepTitle: { tr: "Büyüme", en: "Growth" }, stepDesc: { tr: "Remotion, şair dosyası carousel'lerini ve Divan'dan DM'e videolarını üretir; her platform için ayrı UTM'li bağlantılar kullanılır.", en: "Remotion renders Poet File carousels and From-Divan-to-DM videos; each platform gets its own UTM-tagged links." } }
+      ],
+      highlights: {
+        tr: ["Otomatik LLM Kürasyon Hattı", "Mısra Düzeyinde Sosyal Etkileşim", "Web Push + PWA", "Remotion ile İçerik Üretimi"],
+        en: ["Automated LLM Curation Pipeline", "Line-Level Social Engagement", "Web Push + PWA", "Content Generation with Remotion"]
+      }
+    }
+  },
+  {
     id: 2,
     title: "JulardzijaSmile",
     category: { tr: "Full-Stack Ekosistem", en: "Full-Stack Ecosystem" },
@@ -224,63 +511,73 @@ export const projects = [
     year: "2025",
     role: { tr: "Geliştirici", en: "Developer" },
     description: {
-      tr: "FastAPI + OpenCV tabanlı, üç görüntü işleme aracını tek serviste sunan uygulama: evrak düzeltme, optik form (OMR) okuma ve otomatik tane sayma. HuggingFace Space üzerinde Docker ile canlı yayında.",
-      en: "A FastAPI + OpenCV application offering three image-processing tools in one service: document correction, optical mark (OMR) reading, and automatic grain counting. Live on a HuggingFace Space via Docker."
+      tr: "FastAPI + OpenCV ile üç görüntü işleme aracını tek serviste sunan uygulama: kamerayla belge tarayıp perspektifi düzeltme, çoktan seçmeli optik formları (OMR) okuyup puanlama ve kümelenmiş taneleri sayma. HuggingFace Space üzerinde Docker ile canlı.",
+      en: "A FastAPI + OpenCV application with three image-processing tools in one service: scanning documents by camera and correcting perspective, reading multiple-choice optical forms (OMR) with scoring, and counting clustered grains. Live on a HuggingFace Space via Docker."
     },
-    tags: ["Python", "FastAPI", "OpenCV", "scikit-image", "Computer Vision", "Docker"],
+    tags: ["Python", "FastAPI", "OpenCV", "NumPy", "SciPy", "scikit-image", "JavaScript", "Docker", "HuggingFace Spaces"],
     demoLink: "https://huggingface.co/spaces/beyuphan/goru-isleme",
     impact: {
       tr: [
-        "Eğri/çarpık çekilmiş belgeleri otomatik düzelterek okunabilirliği artırır.",
-        "Çoktan seçmeli optik formları otomatik okur (OMR).",
-        "Tohum/tane gibi nesneleri kümelenmiş olsalar bile doğru sayar."
+        "Canlı kamera önizlemesinde belge köşelerini gerçek zamanlı bulur; eğri çekilmiş kâğıdı en/boy oranını koruyarak dikleştirir.",
+        "Birçok öğrenci kâğıdını toplu yükleyip cevap anahtarına göre puanlar, öğrenci numarasını okur ve sonuçları CSV olarak verir.",
+        "Birbirine değen tohum/tanelerde bile her tanenin alanını tahmin ederek doğru sayıya ulaşır."
       ],
       en: [
-        "Auto-corrects skewed/warped documents to improve readability.",
-        "Automatically reads multiple-choice optical forms (OMR).",
-        "Counts objects like seeds/grains accurately even when clustered."
+        "Finds document corners in real time on the live camera preview and straightens skewed paper while preserving the true aspect ratio.",
+        "Uploads many student sheets at once, scores them against an answer key, reads the student number, and exports results as CSV.",
+        "Estimates each grain's area to reach the right count even when seeds touch each other."
       ]
     },
     architecture: {
-      tr: "FastAPI; üç ayrı router/servis (document, omr, counter); OpenCV + NumPy + scikit-image; Docker ile HuggingFace Space'te (port 7860) yayınlı.",
-      en: "FastAPI with three separate routers/services (document, omr, counter); OpenCV + NumPy + scikit-image; published on a HuggingFace Space (port 7860) via Docker."
+      tr: "FastAPI arka ucu üç router (document, omr, counter) ve üç servis katmanından oluşur (yaklaşık 1250 satır OpenCV kodu: document 507, OMR 500, counter 245). Ortak görüntü yardımcıları utils/image_utils.py'dedir. Vanilla JS arayüzü (kamera modülü, belge/OMR/sayma sayfaları) aynı servisten statik olarak sunulur. Python 3.11-slim tabanlı Docker imajı, OpenCV headless için libgl1/libglib2.0 kurar ve HuggingFace Space'te uvicorn ile 7860 portunda çalışır.",
+      en: "The FastAPI backend has three routers (document, omr, counter) and three service layers (about 1,250 lines of OpenCV code: document 507, OMR 500, counter 245). Shared image helpers live in utils/image_utils.py. A vanilla JS frontend (camera module plus document/OMR/counter pages) is served statically by the same service. A Python 3.11-slim Docker image installs libgl1/libglib2.0 for headless OpenCV and runs uvicorn on port 7860 in the HuggingFace Space."
     },
     algorithms: {
       tr: [
-        "Evrak: perspektif dönüşümü (getPerspectiveTransform / warpPerspective) + kontrast iyileştirme",
-        "OMR: adaptif eşikleme + kontur/balon tespiti ile işaretli şıkların okunması",
-        "Tane sayma: connected components + distance transform + Watershed segmentasyon",
-        "Yuvarlaklık oranı A/(πD²) ile tekil/kümelenmiş tane ayrımı; ağırlıklı medyan tane alanı tahmini"
+        "Belge köşe bulma: ağır (21×21) ve hafif (5×5) Gauss bulanıklaştırma üzerinde iki ölçekli Canny + Otsu ikili haritalarından en büyük 3 kontur aday olur; zemin koyuysa parlak (beyaz kâğıt) bölge adayları da eklenir",
+        "Piksel-hassas köşe: GrabCut ile ön plan maskesi, morfolojik açma/kapama, kontura cv2.fitLine ile kenar doğruları uydurup kesişim noktalarından rafine 4 köşe; başarısız olursa kaba tespite düşer",
+        "Gerçek en/boy oranı tahmini ile perspektif düzeltme (getPerspectiveTransform + warpPerspective), kenardaki arka plan şeridini kırpma ve LAB uzayında yalnız L kanalına CLAHE (clip 1.5, 8×8) ile renk bozmadan kontrast artırma",
+        "Canlı önizleme için hızlı kaba tespit (analyze-frame) ve otomatik tespit başarısızsa manuel köşe seçimi",
+        "OMR: Gauss adaptif eşikleme, CLAHE ile ışık dengeleme ve HoughCircles ile balon tespiti; her balonun doluluk skoruyla işaretli şık seçimi",
+        "OMR ızgara çözümü: baloncukları satır ve sütun olarak 1B kümeleme, boşluk bazlı bölme ile şık sayısı büyüklüğündeki sütun gruplarını cevap bloğu, kalanları öğrenci numarası sütunu sayma; kâğıt 4 yönden denenip en tutarlı yön seçilir",
+        "Cevap anahtarı hem fotoğraftan hem JSON'dan alınır; sonuç görseli doğru/yanlış halkalarıyla çizilir",
+        "Tane sayma: kenar piksellerinin medyan LAB a/b rengine göre otomatik ön plan çıkarma (Otsu), delik doldurma, morfolojik temizlik, connected components + distance transform + Watershed",
+        "Yuvarlaklık oranına göre tekil/kümeli ayrımı; tekil taneler için alan-ağırlıklı medyan tane alanı, kümelerde alan / tane alanı (1.6 katını aşan bileşenlerde) ile sayı tahmini; hassasiyet parametresi ile ayar"
       ],
       en: [
-        "Document: perspective transform (getPerspectiveTransform / warpPerspective) + contrast enhancement",
-        "OMR: adaptive thresholding + contour/bubble detection to read marked options",
-        "Grain counting: connected components + distance transform + Watershed segmentation",
-        "Single-vs-clustered separation via roundness ratio A/(πD²); weighted-median grain-area estimation"
+        "Document corner detection: on heavy (21×21) and light (5×5) Gaussian blurs, the three largest contours from dual-scale Canny + Otsu binary maps become candidates; bright (white paper) region candidates are added when the background is dark",
+        "Pixel-precise corners: a GrabCut foreground mask, morphological open/close, and cv2.fitLine edge lines whose intersections yield refined 4 corners; falls back to the coarse detector on failure",
+        "True aspect-ratio estimation with perspective correction (getPerspectiveTransform + warpPerspective), trimming the background strip at edges, and CLAHE (clip 1.5, 8×8) on only the L channel in LAB to boost contrast without shifting color",
+        "Fast coarse detection for the live preview (analyze-frame) and manual corner selection when auto detection fails",
+        "OMR: Gaussian adaptive thresholding, CLAHE lighting balance, and HoughCircles bubble detection; the marked option is chosen by each bubble's fill score",
+        "OMR grid solving: 1D clustering of bubbles into rows and columns, gap-based splitting, column groups sized to the choice count are answer blocks and the rest count as student-number columns; the sheet is tried in 4 orientations and the most consistent one wins",
+        "The answer key can come from a photo or JSON; the result image is drawn with correct/incorrect rings",
+        "Grain counting: automatic foreground extraction from the median LAB a/b color of border pixels (Otsu), hole filling, morphological cleanup, connected components + distance transform + Watershed",
+        "Single/clustered separation by roundness ratio; a weighted-median grain area from single grains, and counts in clusters estimated as area / grain area (for components above 1.6x); tunable via a sensitivity parameter"
       ]
     },
     technicalDetails: {
       problem: {
-        tr: "Evrak dijitalleştirme, optik form okuma ve nesne sayma gibi işleri tek, erişilebilir bir görüntü işleme servisinde toplamak.",
-        en: "Bringing document digitization, optical-form reading, and object counting together in one accessible image-processing service."
+        tr: "Sınıf ortamında belge tarama, optik form okuma ve nesne sayma için ayrı ayrı pahalı araçlar gerekiyor; telefon kamerasıyla çekilen fotoğraflar ise eğri, gölgeli ve düzensiz ışıklı oluyor. Klasik sabit eşikli yöntemler bu koşullarda kırılıyor.",
+        en: "Document scanning, optical form reading, and object counting each need separate, costly tools; photos from a phone camera are skewed, shadowed, and unevenly lit. Classic fixed-threshold methods break under these conditions."
       },
       solution: {
-        tr: "FastAPI üzerinde modüler OpenCV servisleri; her iş için ayrı router/servis; Docker ile HuggingFace Space'te yayın.",
-        en: "Modular OpenCV services on FastAPI; a separate router/service per task; published on a HuggingFace Space via Docker."
+        tr: "Her işte sabit eşik yerine görüntüden öğrenilen referanslarla (kenar rengi medyanı, balon medyan yarıçapı, kâğıt parlaklığı) çalışan sağlam bir OpenCV hattı; tek bir servis ve tek bir tarayıcı arayüzü.",
+        en: "A robust OpenCV pipeline per task that uses references learned from the image itself (median border color, median bubble radius, paper brightness) instead of fixed thresholds, served as one service with one browser UI."
       },
       engineeringNote: {
-        tr: "Tane sayma, kümelenmiş taneleri ayırmak için distance transform + Watershed kullanır; yuvarlaklık oranıyla tekil/kümeli ayrımı yapıp ağırlıklı medyan alanla sayıyı tahmin eder.",
-        en: "Grain counting uses distance transform + Watershed to split clusters; it separates single vs clustered blobs by roundness ratio and estimates the count via weighted-median area."
+        tr: "Her aşamanın bir düşüş yolu var: hassas köşe bulma başarısız olursa kaba tespite, kaba tespit de olmazsa kullanıcının manuel köşe seçimine geçilir. OMR'de kâğıdın hangi yönde çekildiği önceden bilinmediği için dört yön denenir ve en çok tutarlı cevap veren seçilir.",
+        en: "Every stage has a fallback: if precise corner detection fails it drops to coarse detection, and if that fails the user picks corners manually. In OMR the orientation of the sheet is unknown, so all four are tried and the most consistent reading wins."
       },
       flow: [
-        { stepTitle: { tr: "Yükleme", en: "Upload" }, stepDesc: { tr: "Görsel ilgili API ucuna gönderilir (evrak / OMR / sayma).", en: "An image is sent to the relevant endpoint (document / OMR / count)." } },
-        { stepTitle: { tr: "Ön İşleme", en: "Preprocessing" }, stepDesc: { tr: "Gri tonlama, eşikleme ve perspektif/kontur hazırlığı yapılır.", en: "Grayscale, thresholding, and perspective/contour preparation are applied." } },
-        { stepTitle: { tr: "Analiz", en: "Analysis" }, stepDesc: { tr: "İlgili algoritma çalışır (perspektif düzeltme / OMR okuma / Watershed sayma).", en: "The relevant algorithm runs (perspective correction / OMR reading / Watershed counting)." } },
-        { stepTitle: { tr: "Sonuç", en: "Result" }, stepDesc: { tr: "İşlenmiş görsel ve sayısal sonuç döner.", en: "The processed image and numeric result are returned." } }
+        { stepTitle: { tr: "Canlı Analiz", en: "Live Analysis" }, stepDesc: { tr: "Kamera karesi analyze-frame ucuna gider; kaba köşeler bulunup arayüzde çizilir.", en: "A camera frame goes to the analyze-frame endpoint; coarse corners are found and drawn in the UI." } },
+        { stepTitle: { tr: "Hassas Tespit", en: "Precise Detection" }, stepDesc: { tr: "Çekimde GrabCut ve kenar doğrusu uydurmayla piksel hassasiyetinde köşeler çıkarılır.", en: "On capture, GrabCut and edge-line fitting extract pixel-precise corners." } },
+        { stepTitle: { tr: "Düzeltme / Okuma / Sayma", en: "Correct / Read / Count" }, stepDesc: { tr: "Perspektif düzeltme + CLAHE, OMR ızgara çözümü ve puanlama ya da Watershed ile tane sayımı çalışır.", en: "Perspective correction + CLAHE, OMR grid solving with scoring, or Watershed grain counting runs." } },
+        { stepTitle: { tr: "Sonuç", en: "Result" }, stepDesc: { tr: "İşaretli görsel ve sayısal sonuç döner; OMR sonuçları birikir ve CSV olarak indirilir.", en: "The annotated image and numeric result return; OMR results accumulate and download as CSV." } }
       ],
       highlights: {
-        tr: ["Watershed ile Tane Sayma", "Perspektif Düzeltme", "OMR Optik Form Okuma", "Docker ile Canlı HF Space"],
-        en: ["Watershed Grain Counting", "Perspective Correction", "OMR Optical-Form Reading", "Live HF Space via Docker"]
+        tr: ["GrabCut ile Piksel-Hassas Belge Köşesi", "OMR Izgara Çözümü + Toplu Puanlama", "Watershed ile Kümelenmiş Tane Sayma", "Docker ile Canlı HF Space"],
+        en: ["Pixel-Precise Document Corners via GrabCut", "OMR Grid Solving + Batch Scoring", "Watershed Counting of Clustered Grains", "Live HF Space via Docker"]
       }
     }
   },
@@ -291,61 +588,68 @@ export const projects = [
     year: "2025",
     role: { tr: "Full-Stack Geliştirici", en: "Full-Stack Developer" },
     description: {
-      tr: "TUA Astrohackathon 2025 için geliştirilen uzay sanayii B2B ekosistem eşleştirme platformu; projeler ile şirketleri ağırlıklı bir skorla otomatik eşleştirir.",
-      en: "A space-industry B2B ecosystem matchmaking platform built for TUA Astrohackathon 2025; it automatically matches projects with companies using a weighted score."
+      tr: "TUA Astrohackathon 2025 (Samsun) için geliştirilen uzay sanayii B2B ekosistem eşleştirme platformu. Proje sahipleri iş ilanı açar, kuruluşlar teklif verir; sistem her ikisini dört ölçütlü ağırlıklı bir skorla otomatik eşleştirir.",
+      en: "A space-industry B2B ecosystem matchmaking platform built for TUA Astrohackathon 2025 (Samsun). Project owners post work, organizations bid, and the system automatically matches both with a four-criteria weighted score."
     },
-    tags: ["FastAPI", "React", "PostgreSQL", "SQLAlchemy", "Python", "Docker"],
-    // link: yok (linksiz feature)
+    tags: ["FastAPI", "SQLAlchemy", "PostgreSQL", "React 18", "Vite", "React Router", "Python", "Docker"],
     impact: {
       tr: [
-        "Yeni proje yayınlanınca uygun şirketleri otomatik skorlar ve sıralar.",
-        "Eşik altı eşleşmeleri başvuruya kapatarak kaliteyi korur.",
-        "Hackathon kapsamında uçtan uca (backend + frontend + DB) teslim edildi."
+        "Yeni proje yayınlanınca uygun kuruluşları 0-100 arası skorlar; skor bileşenleri (yetenek, etiket, konum, maliyet) ayrı ayrı gösterilir, neden eşleştiği okunabilir.",
+        "Eşik altı (varsayılan 40) eşleşmeler başvuruya kapatılır; kalite korunur.",
+        "Kuruluş paneli, keşfet ekranı, başvuru yönetimi ve admin istatistikleri ile baştan sona çalışan bir ürün olarak hackathonda teslim edildi."
       ],
       en: [
-        "Automatically scores and ranks suitable companies when a new project is posted.",
-        "Locks sub-threshold matches out of applications to preserve quality.",
-        "Delivered end-to-end (backend + frontend + DB) within the hackathon."
+        "Scores suitable organizations 0–100 when a project is posted; the components (capability, tags, location, cost) are shown separately so the reason for a match is readable.",
+        "Matches below the threshold (default 40) are locked out of applications to preserve quality.",
+        "Delivered as a working product end to end at the hackathon: organization dashboard, discover screen, application management, and admin statistics."
       ]
     },
     architecture: {
-      tr: "FastAPI + SQLAlchemy + PostgreSQL backend; React 18 + Vite frontend; Docker Compose; seed verisiyle hızlı kurulum.",
-      en: "FastAPI + SQLAlchemy + PostgreSQL backend; React 18 + Vite frontend; Docker Compose; quick setup with seed data."
+      tr: "FastAPI + SQLAlchemy + PostgreSQL 15 arka ucu; modeller City, Tag, OrganizationType, Organization, AuthUser, Project ve ProjectMatch. Ayrı router'lar: auth (kayıt, giriş, admin girişi), organizations, projects, matches, cities, tags, org_types ve stats. Eşleştirme ve skorlama services/matching.py içindedir; ağırlıklar ve eşikler config.py'de tek yerde tutulur. React 18 + Vite + React Router arayüzü; sayfalar: Dashboard, Discover, Companies, CompanyProfile, MyProjects, MyProjectDetail, MyApplications, Stats ve admin ekranları. seed.py ile örnek veri yüklenir; Docker Compose ile kurulur.",
+      en: "A FastAPI + SQLAlchemy + PostgreSQL 15 backend; models City, Tag, OrganizationType, Organization, AuthUser, Project, and ProjectMatch. Separate routers: auth (register, login, admin login), organizations, projects, matches, cities, tags, org_types, and stats. Matching and scoring live in services/matching.py; weights and thresholds are kept in one place in config.py. A React 18 + Vite + React Router frontend with pages: Dashboard, Discover, Companies, CompanyProfile, MyProjects, MyProjectDetail, MyApplications, Stats, and admin screens. seed.py loads sample data; Docker Compose handles setup."
     },
     algorithms: {
       tr: [
-        "Ağırlıklı eşleştirme skoru (0-100): Kategori %40, Fiyat %30, Etiket %20, Konum %10",
-        "Haversine ile şehirler arası mesafe (maks. 500 km üzerinden normalizasyon)",
-        "40 puan altı eşleşmelerde başvuru kilidi"
+        "Nihai skor = kategori×0.40 + fiyat×0.30 + etiket×0.20 + konum×0.10; her bileşen 0-100 ölçeğinde, hepsi ProjectMatch satırında ayrı ayrı saklanır ve gerektiğinde yeniden hesaplanır (refresh)",
+        "Konum skoru: konum belirtilmemişse veya aynı şehirse 100; koordinat bulunamazsa 10; aksi halde Haversine mesafesi 500 km'ye kadar doğrusal olarak 100'den 0'a iner",
+        "Etiket skoru: virgülle ayrılmış etiketlerin küçük harfe çevrilmiş küme kesişimi",
+        "Eşleşme nedenleri: bileşen eşiklerini (yetenek 50, etiket 40, konum 80, maliyet 80) geçenler \"yetenek uyumu\", \"etiket uyumu\" vb. gerekçe olarak yazılır; skor kalitesi 70+ yeşil, 45+ turuncu, altı kırmızı",
+        "Parola güvenliği: tuzlu PBKDF2-HMAC-SHA256 (120.000 iterasyon) ve sabit zamanlı karşılaştırma (secrets.compare_digest)",
+        "Keşfet ucu (discover/{org_id}): kuruluşa uygun açık projeleri skorlarıyla listeler; ayrıca başvuru (apply) ve geri çekme (withdraw) uçları bulunur",
+        "Admin istatistik ucu (stats/overview): platform geneli özet ve admin aksiyonları"
       ],
       en: [
-        "Weighted match score (0-100): Category 40%, Price 30%, Tags 20%, Location 10%",
-        "City-to-city distance via Haversine (normalized over a 500 km max)",
-        "Application lock for matches under 40 points"
+        "Final score = category×0.40 + price×0.30 + tags×0.20 + location×0.10; each component is on a 0–100 scale, stored separately on the ProjectMatch row and recomputable on demand (refresh)",
+        "Location score: 100 when no location is given or the city matches; 10 if coordinates are missing; otherwise the Haversine distance falls linearly from 100 to 0 over 500 km",
+        "Tag score: intersection of lower-cased comma-separated tag sets",
+        "Match reasons: components above their thresholds (capability 50, tags 40, location 80, cost 80) are written as reasons such as \"capability fit\" or \"tag fit\"; score quality is green at 70+, orange at 45+, red below",
+        "Password security: salted PBKDF2-HMAC-SHA256 (120,000 iterations) with constant-time comparison (secrets.compare_digest)",
+        "Discover endpoint (discover/{org_id}): lists open projects suited to an organization with their scores; apply and withdraw endpoints are also provided",
+        "Admin stats endpoint (stats/overview): platform-wide summary and admin actions"
       ]
     },
     technicalDetails: {
       problem: {
-        tr: "Uzay sanayii ekosisteminde proje sahipleri ile yetkin şirketleri hızlı ve objektif şekilde eşleştirmek.",
-        en: "Matching project owners with capable companies quickly and objectively in the space-industry ecosystem."
+        tr: "Uzay sanayii ekosisteminde proje sahipleri ile yetkin şirketleri bulmak ve karşılaştırmak elle, tanıdıklık ve belirsiz ölçütlerle yapılıyor; teklifler arasında objektif bir sıralama yok.",
+        en: "In the space-industry ecosystem, finding and comparing capable companies for a project is done by hand, through acquaintance and vague criteria; there is no objective ranking among bids."
       },
       solution: {
-        tr: "Çok kriterli ağırlıklı skorlama servisi; her yeni projede aday şirketleri otomatik puanlayıp sıralar.",
-        en: "A multi-criteria weighted scoring service that automatically scores and ranks candidate companies for each new project."
+        tr: "Kategori, fiyat, etiket ve konumu tek bir 0-100 skorda birleştiren, bileşenleri şeffaf gösteren bir eşleştirme servisi; her yeni proje ve teklifte skor otomatik hesaplanır, eşik altı eşleşmeler kapatılır.",
+        en: "A matching service that combines category, price, tags, and location into a single 0–100 score with transparent components; the score is computed automatically for every new project and bid, and below-threshold matches are closed."
       },
       engineeringNote: {
-        tr: "Eşleştirme skoru kategori/fiyat/etiket/konum bileşenlerinden 0-100 arası hesaplanır; konum bileşeni Haversine mesafesiyle 500 km üzerinden normalize edilir.",
-        en: "The match score is computed 0-100 from category/price/tags/location components; the location component is normalized via Haversine distance over 500 km."
+        tr: "Ağırlıklar ve eşikler kodun içine gömülmek yerine config.py'de tek yerde tutulur; ayarlamak için servis koduna dokunmak gerekmez. Skorun bileşenleri veritabanında saklandığı için arayüz her eşleşmeyi gerekçesiyle açıklayabilir.",
+        en: "Weights and thresholds live in one place in config.py rather than being hard-coded, so tuning them doesn't require touching the service code. Because score components are stored in the database, the UI can explain every match with its reasons."
       },
       flow: [
-        { stepTitle: { tr: "Kayıt", en: "Registration" }, stepDesc: { tr: "Kuruluşlar ve projeler veritabanına eklenir.", en: "Organizations and projects are added to the database." } },
-        { stepTitle: { tr: "Skorlama", en: "Scoring" }, stepDesc: { tr: "Yeni projede aday şirketler 4 kritere göre puanlanır.", en: "Candidate companies are scored on 4 criteria for a new project." } },
-        { stepTitle: { tr: "Eşik", en: "Threshold" }, stepDesc: { tr: "40 puan altı eşleşmeler başvuruya kapatılır.", en: "Matches below 40 points are locked out of applications." } },
-        { stepTitle: { tr: "Eşleşme", en: "Matching" }, stepDesc: { tr: "Sıralı eşleşmeler ve başvurular yönetilir.", en: "Ranked matches and applications are managed." } }
+        { stepTitle: { tr: "Kayıt", en: "Registration" }, stepDesc: { tr: "Kuruluşlar tür, şehir ve etiketleriyle kaydolur; projeler gereken kuruluş türleri, bütçe ve konumla açılır.", en: "Organizations register with type, city, and tags; projects are posted with required organization types, budget, and location." } },
+        { stepTitle: { tr: "Skorlama", en: "Scoring" }, stepDesc: { tr: "Aday kuruluşlar dört ölçüte göre puanlanır; bileşenler ProjectMatch kaydına yazılır.", en: "Candidate organizations are scored on four criteria; the components are written to the ProjectMatch record." } },
+        { stepTitle: { tr: "Keşfet & Başvuru", en: "Discover & Apply" }, stepDesc: { tr: "Kuruluş keşfet ekranında kendisine uygun projeleri skorlarıyla görür; başvurur veya başvurusunu geri çeker.", en: "In the discover screen an organization sees suitable projects with their scores and applies or withdraws." } },
+        { stepTitle: { tr: "Yönetim", en: "Management" }, stepDesc: { tr: "Proje sahibi eşleşmelerin durumunu günceller; admin panelinden platform istatistikleri izlenir.", en: "The project owner updates match statuses; platform statistics are tracked from the admin panel." } }
       ],
       highlights: {
-        tr: ["Ağırlıklı Çok Kriterli Eşleştirme", "Haversine Konum Skoru", "FastAPI + React Uçtan Uca", "Hackathon Teslimi"],
-        en: ["Weighted Multi-Criteria Matching", "Haversine Location Score", "FastAPI + React End-to-End", "Hackathon Delivery"]
+        tr: ["Şeffaf 4 Bileşenli Skor", "Haversine Konum Skoru", "Config'ten Ayarlanabilir Ağırlıklar", "PBKDF2 ile Güvenli Kimlik Doğrulama"],
+        en: ["Transparent 4-Component Score", "Haversine Location Score", "Config-Tunable Weights", "Secure Auth with PBKDF2"]
       }
     }
   },
@@ -356,61 +660,71 @@ export const projects = [
     year: "2025",
     role: { tr: "Geliştirici", en: "Developer" },
     description: {
-      tr: "Yazılım projelerinden Gemini ile otomatik akademik rapor üreten VS Code eklentisi; kod tabanını analiz edip raporu webview panelinde sunar.",
-      en: "A VS Code extension that auto-generates academic reports from software projects with Gemini; it analyzes the codebase and presents the report in a webview panel."
+      tr: "Yazılım projelerini Gemini ile analiz edip akademik formatta PDF rapor üreten VS Code eklentisi. Kod tabanını okur, öğrenci/ders/üniversite bilgileriyle kapak sayfası hazırlar ve Türkçe karakter uyumlu, dizgi hatasız bir PDF çıkarır.",
+      en: "A VS Code extension that analyzes software projects with Gemini and generates an academic-format PDF report. It reads the codebase, builds a cover page from student/course/university details, and outputs a Turkish-character-safe, typeset-clean PDF."
     },
-    tags: ["TypeScript", "VS Code API", "Gemini", "Python", "AI"],
+    tags: ["TypeScript", "VS Code API", "Python", "FastAPI", "Gemini 2.5 Pro", "xhtml2pdf", "ReportLab"],
     link: "https://github.com/beyuphan/codebrief-ai",
     impact: {
       tr: [
-        "Proje raporu yazma yükünü otomatikleştirir.",
-        "Kod tabanından bağlam çıkarıp Gemini ile derli toplu rapor üretir.",
-        "VS Code içinde tek komutla çalışır; yayımlanmış bir eklentidir."
+        "Dönem projesi raporu yazma yükünü tek tıklamaya indirir; proje klasörünün köküne hazır bir PDF bırakır.",
+        "Başlıkların sayfa sonunda yetim kalması ve kod bloklarının sayfalar arasında bölünmesi gibi dizgi sorunlarını çözer.",
+        "Gemini API anahtarı yalnızca yerel .env dosyasında tutulur; kod, yapılandırılan Gemini isteği dışında dışarı gönderilmez.",
+        "Sürüm 2.0'dan 2.3.1'e kadar birçok .vsix sürümü yayımlanmış, VS Code Marketplace'te \"beyuphan\" yayıncısı altında yer alan bir eklentidir."
       ],
       en: [
-        "Automates the burden of writing project reports.",
-        "Extracts context from the codebase and produces a tidy report with Gemini.",
-        "Runs with a single command inside VS Code; a published extension."
+        "Cuts the burden of writing a course-project report to one click, leaving a ready PDF in the project root.",
+        "Solves typesetting problems such as headings orphaned at page bottoms and code blocks split across pages.",
+        "The Gemini API key lives only in a local .env file; code is not sent anywhere beyond the configured Gemini request.",
+        "Shipped as many .vsix releases from 2.0 to 2.3.1, published on the VS Code Marketplace under the \"beyuphan\" publisher."
       ]
     },
     architecture: {
-      tr: "TypeScript VS Code eklentisi (webview sidebar + komut) + arka uç servis (varsayılan localhost:8000); rapor üretimi Gemini API ile yapılır.",
-      en: "A TypeScript VS Code extension (webview sidebar + command) + a backend service (default localhost:8000); report generation uses the Gemini API."
+      tr: "İki parça: (1) TypeScript VS Code eklentisi: komut paleti komutu codebrief.generateReport ve kenar çubuğunda webview formu (öğrenci, proje, ders, üniversite, bölüm, logo); (2) Python FastAPI arka ucu (varsayılan 127.0.0.1:8000, /generate-report ve /health). Arka uç ProjectAnalyzer ile kodu okur, Gemini 2.5 Pro ile Markdown rapor üretir, ReportConverter ile Markdown'ı HTML'e ve xhtml2pdf/ReportLab ile PDF'e çevirir. Eklenti ilk çalıştırmada gereken Python kütüphanelerini kurmayı dener.",
+      en: "Two parts: (1) a TypeScript VS Code extension with the codebrief.generateReport command-palette command and a sidebar webview form (student, project, course, university, department, logo); (2) a Python FastAPI backend (default 127.0.0.1:8000, /generate-report and /health). The backend reads code with ProjectAnalyzer, generates a Markdown report with Gemini 2.5 Pro, and ReportConverter turns Markdown into HTML and then PDF via xhtml2pdf/ReportLab. On first run the extension tries to install the required Python libraries."
     },
     algorithms: {
       tr: [
-        "Kod tabanı tarama + bağlam çıkarımı",
-        "Gemini ile yapılandırılmış akademik rapor üretimi",
-        "Webview ↔ eklenti mesajlaşması"
+        "Akıllı kod tarama: node_modules, dist, build, bin, obj, vendor, target, .git, venv, cache gibi klasörler ve kilit dosyaları atlanır; yalnızca tanımlı kaynak uzantıları (.py, .ts, .cs, .java, .go, .rs, .sql, .md vb.) okunur",
+        "Bağlam sınırı: en fazla 300 dosya, dosya başına 100 KB; her dosya yol başlığıyla tek bir büyük bağlama eklenir ve dosya ağacı ayrıca çıkarılır",
+        "Gemini 2.5 Pro ile yapılandırılmış akademik raporun Markdown olarak üretilmesi; analiz hatası veya model reddi durumunda PDF üretilmeden hata döner",
+        "Türkçe PDF için yazı tipi kaydı (_setup_turkish_fonts) ile ğ, ş, ı gibi karakterlerin doğru basılması",
+        "Yetim başlık önleme (_prevent_orphan_headings): bir başlığın sayfa sonunda tek başına kalmasını HTML düzeyinde engeller",
+        "Kod blokları işleme (_process_code_blocks): kod bloklarının sayfa taşmasını ve bölünmesini düzenler",
+        "Eklenti ile arka uç arasında HTTP: webview form verisi JSON olarak /generate-report ucuna gider, çıktı yolu ve ham Markdown döner"
       ],
       en: [
-        "Codebase scanning + context extraction",
-        "Structured academic report generation with Gemini",
-        "Webview ↔ extension messaging"
+        "Smart code scanning: skips node_modules, dist, build, bin, obj, vendor, target, .git, venv, cache folders and lock files; only recognized source extensions (.py, .ts, .cs, .java, .go, .rs, .sql, .md, etc.) are read",
+        "Context limits: at most 300 files and 100 KB per file; each file is appended to one large context with a path header, and a file tree is extracted separately",
+        "Gemini 2.5 Pro generates a structured academic report as Markdown; on analysis failure or model refusal an error is returned without producing a PDF",
+        "Font registration for Turkish PDFs (_setup_turkish_fonts) so characters such as ğ, ş, ı print correctly",
+        "Orphan heading prevention (_prevent_orphan_headings): stops a heading from being stranded alone at the bottom of a page at the HTML level",
+        "Code-block handling (_process_code_blocks): manages code blocks that overflow or split across pages",
+        "HTTP between extension and backend: webview form data goes to /generate-report as JSON, and the output path and raw Markdown come back"
       ]
     },
     technicalDetails: {
       problem: {
-        tr: "Öğrenci ve geliştiricilerin projeleri için akademik rapor yazmasının zaman alıcı ve tekrarlı olması.",
-        en: "Writing academic reports for projects is time-consuming and repetitive for students and developers."
+        tr: "Öğrenciler ve geliştiriciler dönem projeleri için akademik rapor yazarken kodu, mimariyi ve algoritmaları saatlerce elle belgelemek zorunda; üstüne PDF dizgisi (başlık/kod bloğu kayması, Türkçe karakter) ayrı bir dert.",
+        en: "Students and developers spend hours documenting code, architecture, and algorithms by hand for course-project reports, and PDF typesetting (heading/code-block drift, Turkish characters) is another headache."
       },
       solution: {
-        tr: "VS Code eklentisi kod tabanını analiz eder, Gemini'ye bağlam göndererek yapılandırılmış rapor üretir ve webview'da gösterir.",
-        en: "The VS Code extension analyzes the codebase, sends context to Gemini to produce a structured report, and renders it in a webview."
+        tr: "Kod tabanını bağlam olarak Gemini'ye veren, çıktıyı Markdown'dan dizgisi düzeltilmiş PDF'e çeviren iki katmanlı bir sistem; kullanıcı VS Code'dan çıkmadan raporu alır.",
+        en: "A two-layer system that feeds the codebase to Gemini as context and converts the output from Markdown into a typeset-corrected PDF; the user gets the report without leaving VS Code."
       },
       engineeringNote: {
-        tr: "Eklenti (TypeScript) ile raporu üreten arka uç ayrıktır; backend URL'i ayarlanabilir; rapor webview panelinde canlı sunulur.",
-        en: "The TypeScript extension and the report-generating backend are decoupled; the backend URL is configurable; the report is presented live in a webview panel."
+        tr: "LLM çıktısını doğrudan PDF'e basmak dizgi hatalarıyla dolu olur; bu yüzden Markdown ile PDF arasına HTML son işleme katmanı koydum: yetim başlık ve kod bloğu düzeltmeleri orada yapılıyor. Eklenti ile Python arka ucu ayrı tutulduğu için arka uç bağımsız test edilebiliyor.",
+        en: "Printing LLM output straight to PDF is full of layout errors, so I added an HTML post-processing layer between Markdown and PDF where orphan-heading and code-block fixes happen. Keeping the extension and Python backend separate lets the backend be tested independently."
       },
       flow: [
-        { stepTitle: { tr: "Komut", en: "Command" }, stepDesc: { tr: "VS Code içinde 'Rapor Oluştur' çalıştırılır.", en: "'Generate Report' is run inside VS Code." } },
-        { stepTitle: { tr: "Analiz", en: "Analysis" }, stepDesc: { tr: "Eklenti proje dosyalarından bağlam çıkarır.", en: "The extension extracts context from project files." } },
-        { stepTitle: { tr: "Üretim", en: "Generation" }, stepDesc: { tr: "Gemini yapılandırılmış raporu üretir.", en: "Gemini produces the structured report." } },
-        { stepTitle: { tr: "Sunum", en: "Presentation" }, stepDesc: { tr: "Rapor webview panelinde gösterilir.", en: "The report is shown in the webview panel." } }
+        { stepTitle: { tr: "Komut / Form", en: "Command / Form" }, stepDesc: { tr: "Kenar çubuğundaki formdan öğrenci, ders ve üniversite bilgileri girilir; ilk çalıştırmada Gemini API anahtarı istenir.", en: "Student, course, and university details are entered in the sidebar form; the Gemini API key is requested on first run." } },
+        { stepTitle: { tr: "Kod Tarama", en: "Code Scan" }, stepDesc: { tr: "ProjectAnalyzer gereksiz klasörleri eleyip en fazla 300 dosyayı bağlama toplar.", en: "ProjectAnalyzer filters out noise folders and collects up to 300 files into the context." } },
+        { stepTitle: { tr: "Rapor Üretimi", en: "Report Generation" }, stepDesc: { tr: "Gemini 2.5 Pro yapılandırılmış akademik raporu Markdown olarak yazar.", en: "Gemini 2.5 Pro writes the structured academic report as Markdown." } },
+        { stepTitle: { tr: "PDF Dizgisi", en: "PDF Typesetting" }, stepDesc: { tr: "Markdown HTML'e, HTML düzeltmelerle PDF'e çevrilir; dosya proje kökünde oluşur.", en: "Markdown becomes HTML, then a PDF with the fixes applied; the file lands in the project root." } }
       ],
       highlights: {
-        tr: ["Gemini Destekli Rapor", "VS Code Eklentisi (Webview)", "Kod Tabanı Analizi", "Yayımlanmış Eklenti"],
-        en: ["Gemini-Powered Reports", "VS Code Extension (Webview)", "Codebase Analysis", "Published Extension"]
+        tr: ["Gemini 2.5 Pro ile Akademik Rapor", "Dizgisi Düzeltilmiş PDF", "VS Code Kenar Çubuğu Eklentisi", "Yerel API Anahtarı"],
+        en: ["Academic Report with Gemini 2.5 Pro", "Typeset-Corrected PDF", "VS Code Sidebar Extension", "Local API Key"]
       }
     }
   },
@@ -485,61 +799,72 @@ export const projects = [
     year: "2025",
     role: { tr: "Full-Stack Geliştirici", en: "Full-Stack Developer" },
     description: {
-      tr: "Kullanıcıların kitap incelemeleri paylaştığı, birbirini takip edebildiği ve veri tabanı odaklı kurgulanan sosyal etkileşim platformu.",
-      en: "A database-driven social platform where users share book reviews, rate books, and follow one another."
+      tr: "Kullanıcıların kitap ekleyip inceleme yazdığı, puanladığı, beğendiği ve birbirini takip ettiği sosyal kitap platformu. Java 17 ve Jakarta EE (Servlet/JSP) ile MVC + DAO mimarisinde, MySQL üzerinde yazıldı.",
+      en: "A social book platform where users add books, write reviews, rate, like, and follow one another. Written in Java 17 and Jakarta EE (Servlet/JSP) with an MVC + DAO architecture on MySQL."
     },
-    tags: ["Java", "Jakarta EE", "MySQL", "AJAX", "Tomcat"],
+    tags: ["Java 17", "Jakarta EE", "Servlet/JSP", "MySQL", "Maven", "Tomcat 11", "AJAX", "Gson", "jBCrypt"],
     link: "https://github.com/beyuphan/KitapKosem",
     reportPath: "/reports/web-rapor.pdf",
     impact: {
       tr: [
-        "Güvenli kimlik doğrulama ve sosyal etkileşim (takip, beğeni, puan) sunar.",
-        "Sayfa yenilemeden akan, hızlı bir kullanıcı deneyimi sağlar."
+        "Kayıt, giriş, profil düzenleme, takip, beğeni ve yorum akışıyla tam bir sosyal döngü sunar.",
+        "Takip edilen kullanıcıların etkinliklerinden oluşan bir zaman akışı gösterir; sayfa yenilemeden akar.",
+        "Kitap kapakları imgBB API'siyle yüklenir, böylece sunucu disk yönetimi gerekmez.",
+        "Procfile ve dağıtım rehberiyle Railway/Heroku'ya alınabilecek şekilde hazırlanmıştır."
       ],
       en: [
-        "Provides secure authentication and social interaction (follow, like, rate).",
-        "Delivers a fast UX that flows without page reloads."
+        "Delivers a full social loop with registration, login, profile editing, following, likes, and reviews.",
+        "Shows a timeline built from followed users' activity that flows without page reloads.",
+        "Book covers upload through the imgBB API, avoiding server disk management.",
+        "Ready to deploy to Railway/Heroku with a Procfile and a deployment guide."
       ]
     },
     architecture: {
-      tr: "Java/Jakarta EE (Servlet/JSP) MVC; DAO veri katmanı; MySQL; AJAX/JSON; Apache Tomcat.",
-      en: "Java/Jakarta EE (Servlet/JSP) MVC; a DAO data layer; MySQL; AJAX/JSON; Apache Tomcat."
+      tr: "Java 17 + Jakarta EE (Servlet/JSP, JSTL) MVC. 15 kontrolcü servlet'i (AddBook, AddReview, BookDetail, DeleteBook, DeleteReview, EditProfile, Follow, Index, LikeBook, LikeReview, Login, Logout, Profile, Register, Timeline); 5 DAO (User, Book, Review, Follow, Activity); 4 model (User, Book, Review, Activity); ImageUploadService ve PasswordUtil yardımcıları. MySQL 8, Maven ile derlenir, Tomcat 11 üzerinde çalışır. Ön yüz JSP + vanilla JS (index.js, timeline.js, bookDetail.js, profile.js) ve AJAX/JSON ile konuşur.",
+      en: "Java 17 + Jakarta EE (Servlet/JSP, JSTL) MVC. 15 controller servlets (AddBook, AddReview, BookDetail, DeleteBook, DeleteReview, EditProfile, Follow, Index, LikeBook, LikeReview, Login, Logout, Profile, Register, Timeline); 5 DAOs (User, Book, Review, Follow, Activity); 4 models (User, Book, Review, Activity); ImageUploadService and PasswordUtil helpers. MySQL 8, built with Maven, running on Tomcat 11. The frontend is JSP + vanilla JS (index.js, timeline.js, bookDetail.js, profile.js) talking via AJAX/JSON."
     },
     algorithms: {
       tr: [
-        "MVC + DAO katmanlı mimari",
-        "jBCrypt ile güvenli şifre hashleme",
-        "AJAX ile sonsuz kaydırma (infinite scroll) zaman akışı",
-        "imgBB API + HttpClient ile görsel yükleme"
+        "MVC + DAO katmanlı mimari: servlet'ler HTTP'yi karşılar, DAO'lar SQL'i soyutlar, modeller POJO olarak taşınır",
+        "jBCrypt ile tuzlu parola hashleme (PasswordUtil)",
+        "ActivityDAO ile kullanıcı eylemlerinin (kitap ekleme, inceleme, beğeni) kayıt altına alınması ve takip edilenlerin etkinliklerinden zaman akışı üretilmesi",
+        "AJAX ile sonsuz kaydırma: zaman akışı sayfa sayfa JSON olarak çekilir ve DOM'a eklenir",
+        "Kitap ve inceleme için ayrı beğeni uçları (LikeBook/LikeReview), AJAX ile anında geri bildirim",
+        "imgBB API'sine Apache HttpClient (httpmime) ile çok parçalı görsel yükleme",
+        "Gson ile JSON serileştirme"
       ],
       en: [
-        "Layered MVC + DAO architecture",
-        "Secure password hashing with jBCrypt",
-        "AJAX infinite-scroll timeline",
-        "Image upload via imgBB API + HttpClient"
+        "Layered MVC + DAO: servlets handle HTTP, DAOs abstract SQL, models travel as POJOs",
+        "Salted password hashing with jBCrypt (PasswordUtil)",
+        "ActivityDAO records user actions (adding books, reviews, likes) and builds the timeline from the activity of followed users",
+        "AJAX infinite scroll: the timeline is fetched page by page as JSON and appended to the DOM",
+        "Separate like endpoints for books and reviews (LikeBook/LikeReview) with instant AJAX feedback",
+        "Multipart image upload to the imgBB API with Apache HttpClient (httpmime)",
+        "JSON serialization with Gson"
       ]
     },
     technicalDetails: {
       problem: {
-        tr: "Kullanıcıların okuma deneyimlerini paylaşabileceği dinamik, güvenli ve etkileşimli bir sosyal topluluk platformu mimarisi kurmak.",
-        en: "Build a dynamic, secure, and interactive social community platform where users can share their reading experiences."
+        tr: "Okurların kitap deneyimlerini paylaşabileceği, diğer okurları takip edip onların etkinliğini görebileceği; güvenli, dinamik ve sayfa yenileme gerektirmeyen bir topluluk platformu kurmak.",
+        en: "Build a secure, dynamic community platform that needs no page reloads, where readers share book experiences and follow others to see their activity."
       },
       solution: {
-        tr: "Jakarta EE (Servlet/JSP) tabanlı, MVC desenine uygun katmanlı mimari; DAO katmanı veritabanını soyutlar.",
-        en: "A layered architecture on Jakarta EE (Servlet/JSP) following MVC; a DAO layer abstracts the database."
+        tr: "Jakarta EE Servlet/JSP üzerinde MVC; veri erişimini DAO katmanına yalıtan, eylemleri bir etkinlik tablosunda toplayıp takip grafiğinden zaman akışı üreten bir mimari.",
+        en: "MVC on Jakarta EE Servlet/JSP with data access isolated in a DAO layer; user actions are collected into an activity table and the timeline is built from the follow graph."
       },
       engineeringNote: {
-        tr: "DAO katmanı veritabanı etkileşimini soyutlayarak yönetilebilirliği artırır; jBCrypt ile şifreler güvenli hashlenir.",
-        en: "The DAO layer abstracts database interaction to improve maintainability; jBCrypt securely hashes passwords."
+        tr: "Servlet başına tek sorumluluk (ekle, sil, beğen, takip et) kodu okunur tutar; ortak iş mantığı DAO ve servis katmanlarında toplanır. Görsel yükleme dış servise bırakılarak uygulama durumsuz kalır ve platforma dağıtımı kolaylaşır.",
+        en: "One responsibility per servlet (add, delete, like, follow) keeps the code readable, with shared logic in the DAO and service layers. Delegating image upload to an external service keeps the app stateless and easy to deploy."
       },
       flow: [
-        { stepTitle: { tr: "Servlet Controller", en: "Servlet Controller" }, stepDesc: { tr: "HTTP istekleri Servlet'lerce yakalanır ve iş mantığına yönlendirilir.", en: "HTTP requests are captured by servlets and routed to business logic." } },
-        { stepTitle: { tr: "DAO Katmanı", en: "DAO Layer" }, stepDesc: { tr: "POJO modellerle MySQL üzerinde CRUD yürütülür.", en: "CRUD runs over MySQL using POJO models." } },
-        { stepTitle: { tr: "AJAX & JSON", en: "AJAX & JSON" }, stepDesc: { tr: "Beğeni ve zaman akışı sayfa yenilenmeden asenkron güncellenir.", en: "Likes and the timeline update asynchronously without reloads." } }
+        { stepTitle: { tr: "Kimlik Doğrulama", en: "Authentication" }, stepDesc: { tr: "Register/Login servlet'leri jBCrypt ile parolayı doğrular, oturum açar.", en: "Register/Login servlets verify the password with jBCrypt and start a session." } },
+        { stepTitle: { tr: "İçerik", en: "Content" }, stepDesc: { tr: "Kitap ekleme, kapak yükleme (imgBB) ve inceleme/puan yazma servlet'leri DAO üzerinden MySQL'e yazar.", en: "Servlets for adding books, uploading covers (imgBB), and writing reviews/ratings write to MySQL through DAOs." } },
+        { stepTitle: { tr: "Sosyal Etkileşim", en: "Social Interaction" }, stepDesc: { tr: "Takip, kitap ve inceleme beğenisi AJAX ile sayfa yenilenmeden uygulanır; her eylem etkinlik olarak kaydedilir.", en: "Follows and likes on books and reviews are applied via AJAX without reloads; each action is recorded as activity." } },
+        { stepTitle: { tr: "Zaman Akışı", en: "Timeline" }, stepDesc: { tr: "Takip edilenlerin etkinlikleri Timeline servlet'inden sonsuz kaydırmayla JSON olarak akar.", en: "Followed users' activity streams from the Timeline servlet as JSON with infinite scroll." } }
       ],
       highlights: {
-        tr: ["MVC Mimari Tasarımı", "BCrypt ile Güvenli Hashleme", "Infinite Scroll Zaman Akışı", "imgBB Görsel Entegrasyonu"],
-        en: ["MVC Architecture Design", "Secure Hashing with BCrypt", "Infinite-Scroll Timeline", "imgBB Image Integration"]
+        tr: ["15 Servlet ile MVC + DAO", "Takip Grafiğinden Zaman Akışı", "jBCrypt ile Güvenli Parolalar", "imgBB Görsel Entegrasyonu"],
+        en: ["MVC + DAO with 15 Servlets", "Timeline from the Follow Graph", "Secure Passwords with jBCrypt", "imgBB Image Integration"]
       }
     }
   },
@@ -613,61 +938,66 @@ export const projects = [
     id: 4,
     title: "Kopernik Tedarik Yönetimi",
     category: { tr: "Mobil Geliştirme", en: "Mobile Development" },
-    year: "2025",
+    year: "2024",
     role: { tr: "Mobil Geliştirici", en: "Mobile Developer" },
     description: {
-      tr: "Firebase backend entegrasyonu ile çalışan, gerçek zamanlı stok ve tedarik zinciri takip mekanizmalarına sahip mobil platform.",
-      en: "A mobile platform with real-time stock and supply-chain tracking, powered by Firebase backend integration."
+      tr: "Kullanıcıların tedarik ilanı açıp birbirine başvurduğu Flutter + Firebase mobil uygulaması. Bir ilana başvuru geldiğinde Cloud Function ile ilan sahibine anında push bildirimi gider.",
+      en: "A Flutter + Firebase mobile app where users post supply listings and apply to one another's. When an application arrives, a Cloud Function pushes an instant notification to the listing owner."
     },
-    tags: ["Flutter", "Dart", "Firebase Auth", "Firestore", "Cloud Functions"],
+    tags: ["Flutter", "Dart", "Firebase Auth", "Firestore", "Cloud Functions", "FCM"],
     link: "https://github.com/beyuphan/KopernikProject",
     impact: {
       tr: [
-        "Tüm kullanıcılar arasında anlık veri senkronizasyonu sağlar.",
-        "Güvenli kimlik doğrulama ve merkezi profil yönetimi sunar."
+        "İlan, başvuru ve profil verisi Firestore ile tüm kullanıcılar arasında anlık senkron kalır.",
+        "Yeni bir başvuru oluştuğunda ilan sahibine sunucu tarafından push bildirimi gönderilir; uygulama kapalıyken de ulaşır.",
+        "Herkese açık profil sayfaları ile tedarikçiler birbirini keşfeder."
       ],
       en: [
-        "Keeps data synchronized instantly across all users.",
-        "Provides secure authentication and centralized profile management."
+        "Listing, application, and profile data stay synchronized instantly across all users through Firestore.",
+        "When a new application is created, the server pushes a notification to the listing owner, reaching them even when the app is closed.",
+        "Public profile pages let suppliers discover each other."
       ]
     },
     architecture: {
-      tr: "Flutter (BLoC/Provider); Firebase Auth + Firestore; Cloud Storage; Lottie animasyonları.",
-      en: "Flutter (BLoC/Provider); Firebase Auth + Firestore; Cloud Storage; Lottie animations."
+      tr: "Flutter (Dart) istemci; ekranlar: giriş, kayıt, ana sayfa, tedarik detayı, başvuru, profil, herkese açık profil, bağlantılar. Servis katmanı: auth_service ve notification_service (FCM token yönetimi); ortak widget'lar ve tema. Firebase tarafı: Auth, Firestore (users, supplies ve supplies/{id}/applications alt koleksiyonu) ve Node.js Cloud Functions (v2).",
+      en: "A Flutter (Dart) client; screens: login, register, home, supply detail, application, profile, public profile, and links. Service layer: auth_service and notification_service (FCM token management); shared widgets and theme. Firebase side: Auth, Firestore (users, supplies, and the supplies/{id}/applications subcollection), and Node.js Cloud Functions (v2)."
     },
     algorithms: {
       tr: [
-        "Firestore ile gerçek zamanlı veri senkronizasyonu",
-        "Firebase Auth tabanlı güvenli oturum",
-        "Reaktif stok/tedarik akışı"
+        "Firestore tetikleyicisi: supplies/{supplyId}/applications/{applicantId} altında yeni belge oluşunca onDocumentCreated çalışır",
+        "Fonksiyon zinciri: ilanı bulur, ilan sahibini (created_by) ve başvuran kullanıcıyı Firestore'dan okur, satıcının fcmToken'ını alır ve başvuranın adıyla FCM bildirimi gönderir",
+        "Eksik belge, kullanıcı veya boş token durumunda fonksiyon sessizce ve loglayarak erken çıkar; başvuru yazımı bu yüzden hiçbir zaman başarısız olmaz",
+        "Kullanıcı belgesinde saklanan fcmToken alanı ile cihaz bazlı hedefleme (notification_service istemci tarafında token'ı yönetir)"
       ],
       en: [
-        "Real-time data sync with Firestore",
-        "Secure sessions via Firebase Auth",
-        "Reactive stock/supply stream"
+        "Firestore trigger: onDocumentCreated fires when a new document appears under supplies/{supplyId}/applications/{applicantId}",
+        "Function chain: finds the listing, reads the owner (created_by) and applicant from Firestore, gets the seller's fcmToken, and sends an FCM notification with the applicant's name",
+        "On a missing document, user, or empty token the function exits early with logging, so writing an application never fails because of it",
+        "Per-device targeting through the fcmToken field stored on the user document (notification_service manages the token on the client)"
       ]
     },
     technicalDetails: {
       problem: {
-        tr: "Dinamik tedarik süreçlerinde verilerin senkronize olmaması nedeniyle yaşanan stok takibi ve iletişim aksaklıkları.",
-        en: "Stock-tracking and communication breakdowns in dynamic supply processes caused by unsynchronized data."
+        tr: "Dinamik tedarik süreçlerinde ilan sahibi, başvuru geldiğini uygulamayı açmadıkça fark etmiyor; veriler farklı cihazlarda senkron olmadığında iletişim ve stok takibi aksıyor.",
+        en: "In dynamic supply processes, the listing owner doesn't notice an application until they open the app; when data isn't synchronized across devices, communication and tracking break down."
       },
       solution: {
-        tr: "Flutter (BLoC/Provider) ve Firestore ile tüm kullanıcılar arasında anlık senkronizasyon; profiller ve tedarik detayları merkezi bulutta yönetilir.",
-        en: "Instant sync across users with Flutter (BLoC/Provider) and Firestore; profiles and supply details managed centrally in the cloud."
+        tr: "Firestore ile gerçek zamanlı veri, Firebase Auth ile kimlik ve Cloud Functions + FCM ile olay güdümlü bildirim: istemci sadece başvuru belgesini yazar, bildirim mantığı tamamen sunucuda çalışır.",
+        en: "Real-time data with Firestore, identity with Firebase Auth, and event-driven notification with Cloud Functions + FCM: the client only writes the application document and the notification logic runs entirely on the server."
       },
       engineeringNote: {
-        tr: "Kullanıcı deneyimi özel ses efektleri ve Lottie animasyonlarıyla desteklendi; bildirim servisleri entegre edildi.",
-        en: "UX is supported by custom sound effects and Lottie animations; notification services are integrated."
+        tr: "Bildirimi istemciden göndermek, başka bir kullanıcının FCM token'ına erişmeyi gerektirir. Bunu Firestore tetikleyicili bir Cloud Function'a taşıyınca istemci yalnızca başvuru belgesini yazıyor, token okuma ve gönderme sunucuda kalıyor.",
+        en: "Sending the notification from the client would require reading another user's FCM token. Moving it to a Firestore-triggered Cloud Function means the client only writes the application document, while token reading and sending stay on the server."
       },
       flow: [
-        { stepTitle: { tr: "Firebase Auth", en: "Firebase Auth" }, stepDesc: { tr: "Kullanıcılar güvenli kayıt olur ve profillerini yönetir.", en: "Users sign up securely and manage their profiles." } },
-        { stepTitle: { tr: "Gerçek Zamanlı Takip", en: "Real-time Tracking" }, stepDesc: { tr: "Tedarik listeleri Firestore üzerinden anlık güncellenir.", en: "Supply lists update instantly via Firestore." } },
-        { stepTitle: { tr: "Zaman Akışı", en: "Timeline" }, stepDesc: { tr: "Tedarik geçmişi ve aktif durum görsel akışla sunulur.", en: "Supply history and active status are presented as a visual flow." } }
+        { stepTitle: { tr: "Kimlik", en: "Identity" }, stepDesc: { tr: "Firebase Auth ile kayıt/giriş; FCM token'ı kullanıcı belgesine yazılır.", en: "Sign-up/login via Firebase Auth; the FCM token is written to the user document." } },
+        { stepTitle: { tr: "İlan", en: "Listing" }, stepDesc: { tr: "Kullanıcı tedarik ilanı açar; ilanlar Firestore'dan canlı listelenir.", en: "A user posts a supply listing; listings are shown live from Firestore." } },
+        { stepTitle: { tr: "Başvuru", en: "Application" }, stepDesc: { tr: "Başvuran, ilanın applications alt koleksiyonuna belge yazar.", en: "An applicant writes a document into the listing's applications subcollection." } },
+        { stepTitle: { tr: "Bildirim", en: "Notification" }, stepDesc: { tr: "Cloud Function tetiklenir, ilan sahibinin token'ına FCM bildirimi gönderir.", en: "A Cloud Function fires and sends an FCM notification to the listing owner's token." } }
       ],
       highlights: {
-        tr: ["Firebase Gerçek Zamanlı Sync", "Cloud Storage Entegrasyonu", "Özel UI Animasyonları", "Merkezi Profil Yönetimi"],
-        en: ["Firebase Real-time Sync", "Cloud Storage Integration", "Custom UI Animations", "Centralized Profile Management"]
+        tr: ["Firestore Tetikleyicili Cloud Function", "FCM ile Sunucu Taraflı Push", "Gerçek Zamanlı Senkronizasyon", "Herkese Açık Tedarikçi Profilleri"],
+        en: ["Firestore-Triggered Cloud Function", "Server-Side Push via FCM", "Real-Time Synchronization", "Public Supplier Profiles"]
       }
     }
   },

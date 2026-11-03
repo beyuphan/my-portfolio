@@ -1,10 +1,9 @@
 // Vercel Serverless Function — /api/interview/ask
-// HR agent: Gemini ile Eyüphan'ın ağzından (birinci şahıs) cevap üretir.
-// GEMINI_API_KEY Vercel ortam değişkeni olarak verilir (client'a sızmaz).
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const MODELS = ['gemini-2.5-flash', 'gemini-2.5-pro'];
+// HR agent: Groq (OpenAI uyumlu API) ile Eyüphan'ın ağzından (birinci şahıs) cevap üretir.
+// GROQ_API_KEY Vercel ortam değişkeni olarak verilir (client'a sızmaz).
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+// Birincil + yedek model (biri limitteyse/hata verirse diğerine düşülür)
+const MODELS = ['llama-3.3-70b-versatile', 'openai/gpt-oss-20b'];
 
 const persona = `
 EYÜPHAN BİNİCİ HAKKINDA (sen busun):
@@ -23,10 +22,14 @@ TEKNİK YETKİNLİKLER:
 PROJELER (en çok bahsetmek istediklerim önce):
 - GeoIntel MCP (bayrak projem): Python/FastAPI + Model Context Protocol (MCP) + LangGraph ile AI destekli coğrafi rotalama ve seyahat zekâsı platformu. Docker Compose ile 6 servisli mikroservis mimarisi (orchestrator + FastMCP araç sunucuları + PostGIS/pgRouting/pgVector + Redis). Algoritmalar: pgRouting Dijkstra ile en kısa yol ve yağmur faktörlü maliyet (C = L × (1 + yağmur × 0.3)); HERE Maps (canlı trafik) ile pgRouting (yerel fallback) arasında hibrit rotalama; LangGraph 3-node akış (intent → LLM araç seçimi → MCP RPC); rota boyunca 40km'de hava analizi, yakıt durağı yerleştirme, gişe ve radar tespiti. LLM olarak Claude birincil, Gemini yedek.
 - Moka Agent Wallet (hackathon finalisti): NestJS 11 + Prisma + PostgreSQL + Redis backend ve React 19 (Vite) paneli ile, yapay zeka ajanlarının şirket adına güvenle para harcamasını sağlayan ödeme yetkilendirme platformu. Patronun doğal dilde yazdığı kural ("teknolojiye ayda en fazla 50.000 TL harca") LLM ile kriptografik yetki belgesine (mandate) derlenir. Tek giriş noktası POST /api/authorize; akış: idempotency → Ed25519/JWS imza + 60 saniyelik replay penceresi → scoped token → kural motoru → AI risk bekçisi (Claude; LOW/MEDIUM/HIGH) → ödeme ağı → hash-zincirli değişmez defter. Defter PostgreSQL trigger ile append-only'dir (UPDATE/DELETE engellenir), GET /ledger/verify zinciri genesis'ten bugüne doğrular; eşzamanlı taleplerde SELECT ... FOR UPDATE satır kilidiyle limit aşımı yarış koşulu engellenir. AI asla tek başına onay vermez: sadece bloklar (HIGH) veya insana eskalasyon yapar (MEDIUM); Anthropic API erişilemezse 3 sn timeout ile deterministik mock'a düşer. Canlı defter SSE ile panele akar. Bu projeyle hackathon finaline kaldık.
+- Kıvılcım: Python/FastAPI + SQLAlchemy + Leaflet ile NASA FIRMS uydu verisinden Türkiye'deki orman yangını tespitlerini haritada gösteren izleme paneli. Yakındaki tespitleri, verinin tazeliğini, uydunun bölgeyi tarayıp taramadığını ve deneysel yangın havası indeksini (AUC ≈ 0.7, yayılım tahmini değil) sunar; Telegram uyarı botu, geçmiş yangınların öncesi/sonrası uydu karşılaştırması (2016'ya kadar arşiv) ve açık API içerir. Her 30 dakikada veri çeker.
+- Ash n Seed: Godot 4 ile COP31 Oyun Hackathonu için geliştirilen 2D piksel sanatlı şehir yönetimi oyunu. Belediye başkanı olarak otuz günde Karatepe'yi yeniden yeşertirsin: masada karar kartları, sahada ağaç dikme/çöp toplama/baca filtresi, akşam gazete; kararların günler sonra geri döndüğü "kelebek etkisi" mekaniği ve 4 mini oyun. Windows sürümü GitHub'da, web sürümü itch.io'da.
+- SimTrack: Web kamerasıyla kafa takibi yapan, Rust + Tauri 2 (React/TypeScript arayüz) masaüstü uygulaması. İki ONNX modeliyle (ONNX Runtime) yüz ve duruş tahmini yapar (~10 ms/kare), One-Euro filtre ve ölü bölge uygular, sonucu FreeTrack paylaşımlı belleğiyle Euro Truck Simulator 2, American Truck Simulator, MSFS, DCS gibi TrackIR/FreeTrack destekli oyunlara iletir. MIT lisanslı açık kaynak.
+- Mısra: Next.js 16 + React 19 + Supabase (PostgreSQL, Auth, Deno Edge Functions, pg_cron) ile geliştirdiğim, günde iki kez şiir sunan sosyal şiir uygulaması (PWA). Groq LLM önce şairi seçer, sonra şairin doğrulanmış listesinden şiiri seçer (uydurma başlık sorununu önlemek için); YouTube Data API ile okuma videosu bulunur, web push (VAPID) ile abonelere gönderilir. Teslimat güvenilirliği için slot kilitleri, zaman pencereleri ve Telegram alarmı vardır. Okuyucular mısra mısra yıldızlar, listeler, takip eder, yorum yapar, paylaşım kartı üretir. Remotion ile Instagram carousel ve video içeriği de üretilir.
 - JulardzijaSmile: NestJS + Flutter + Prisma + PostgreSQL + S3 + Docker ile uçtan uca saç ekim klinik yönetim platformu. Flutter "Photo Wizard" 5 sabit açıda hizalı görüntü yakalar; NestJS WebSocket Gateway ile gerçek zamanlı doktor-hasta sohbeti; React admin paneli. Bu projeyle de hackathon finaline kaldık.
 - Görüntü İşleme (HuggingFace): FastAPI + OpenCV ile evrak perspektif düzeltme, OMR optik form okuma ve tane sayma. Tane sayma connected components + distance transform + Watershed segmentasyon kullanır; yuvarlaklık oranı A/(πD²) ile tekil/kümelenmiş tane ayrımı yapar. Docker ile HuggingFace Space'te canlı.
 - OrbitMatch B2B: TUA Astrohackathon 2025 için FastAPI + React + PostgreSQL ile uzay sanayii eşleştirme platformu. Ağırlıklı skor (Kategori %40, Fiyat %30, Etiket %20, Konum %10); konum bileşeni Haversine mesafesiyle hesaplanır.
-- CodeBrief AI: TypeScript VS Code eklentisi; kod tabanını analiz edip Gemini ile otomatik akademik rapor üretir (yayımlanmış eklenti, publisher: beyuphan).
+- CodeBrief AI: TypeScript VS Code eklentisi + Python FastAPI arka ucu; kod tabanını (en fazla 300 dosya) analiz edip Gemini 2.5 Pro ile akademik rapor üretir ve yetim başlık/kod bloğu düzeltmeli Türkçe uyumlu PDF çıkarır (yayımlanmış eklenti, publisher: beyuphan).
 - KitapKöşem: Java/Jakarta EE (Servlet/JSP), MVC + DAO mimari, jBCrypt, AJAX sonsuz kaydırma ile sosyal kitap platformu.
 - Fourier Ses Temizleme: Python, STFT tabanlı spektral çıkarım (Hann pencereleme, Overlap-Add) ile gerçek zamanlı gürültü temizleme (PyQt5).
 - Jetpack E-Ticaret: Kotlin + Jetpack Compose + MVVM + Hilt; API kısıtlarını DataStore ve ViewModel algoritmalarıyla aşan e-ticaret uygulaması.
@@ -44,7 +47,7 @@ DİLLER: Türkçe (ana dil), İngilizce (orta seviye).
 İLETİŞİM: eyuphan546@gmail.com · github.com/beyuphan · beyuphan.vercel.app
 `;
 
-// Basit, instance-içi (best-effort) rate limit — Gemini kotasını korur.
+// Basit, instance-içi (best-effort) rate limit — Groq kotasını korur.
 const hits = new Map();
 function rateLimited(ip) {
   const now = Date.now();
@@ -75,34 +78,59 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (!process.env.GEMINI_API_KEY) {
-    res.status(500).json({ message: 'GEMINI_API_KEY tanımlı değil.' });
+  if (!process.env.GROQ_API_KEY) {
+    res.status(500).json({ message: 'GROQ_API_KEY tanımlı değil.' });
     return;
   }
 
-  const prompt = `${persona}
+  const systemPrompt = `${persona}
 
 KURALLAR:
 - Sen Eyüphan Binici'sin. Soruya BİRİNCİ TEKİL ŞAHISLA ("ben") cevap ver — sanki bir iş görüşmesindesin.
 - Soru hangi dildeyse O DİLDE cevap ver (Türkçe soruya Türkçe, İngilizce soruya İngilizce).
 - Profesyonel, samimi ve net ol. Kısa tut; ama teknik/derin bir soruysa gerektiği kadar açıkla (en fazla ~6 cümle).
 - Yukarıdaki bilgilerde olmayan bir şey sorulursa UYDURMA; "Bu konuda elimde net bilgi yok" diyerek dürüst ol, sonra varsa ilgili bir güçlü yanını belirt.
-- Kendini iyi ama abartısız anlat.
-
-SORU: ${question}`;
+- Kendini iyi ama abartısız anlat.`;
 
   let lastErr;
-  for (const modelName of MODELS) {
+  for (const model of MODELS) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        const result = await model.generateContent(prompt);
-        res.status(200).json({ question, answer: result.response.text().trim() });
+        const body = {
+          model,
+          temperature: 0.4,
+          max_tokens: 700,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: question },
+          ],
+        };
+        // gpt-oss modelleri dahili "reasoning" token harcar; düşük tut ki cevap kesilmesin
+        if (model.startsWith('openai/gpt-oss')) body.reasoning_effort = 'low';
+
+        const r = await fetch(GROQ_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (!r.ok) {
+          const err = new Error(`Groq ${r.status}`);
+          err.status = r.status;
+          throw err;
+        }
+        const data = await r.json();
+        const answer = data.choices?.[0]?.message?.content?.trim();
+        if (!answer) throw new Error('Boş yanıt');
+        res.status(200).json({ question, answer });
         return;
       } catch (err) {
         lastErr = err;
-        const status = err?.status;
-        if (status === 503 || status === 429) {
+        // 429 (limit) / 5xx → kısa bekleyip tekrar dene; değilse sonraki modele geç
+        if (err.status === 429 || err.status >= 500) {
           await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
           continue;
         }
@@ -111,6 +139,6 @@ SORU: ${question}`;
     }
   }
 
-  console.error('Gemini error:', lastErr);
+  console.error('Groq error:', lastErr);
   res.status(503).json({ message: 'Agent şu an yanıt veremiyor, lütfen tekrar deneyin.' });
 }

@@ -20,7 +20,7 @@ export class InterviewController {
       throw new BadRequestException('Soru çok uzun (en fazla 300 karakter).');
     }
 
-    // Gelen soruyu Gemini + Replicate mantığına gönderiyoruz
+    // Gelen soruyu Groq (LLM) mantığına gönderiyoruz
     return this.interviewService.processInterviewQuestion(question);
   }
 }
