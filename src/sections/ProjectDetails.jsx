@@ -260,7 +260,7 @@ const ProjectDetail = () => {
             <div className="mt-16 pt-8 border-t border-gray-100 space-y-4">
               <div className="flex justify-between text-[10px] mono-detail">
                 <span>{t('pd.location')}</span>
-                <span className="text-black">Samsun / OMU</span>
+                <span className="text-black">Rize / OMU</span>
               </div>
               <div className="flex justify-between text-[10px] mono-detail">
                 <span>{t('pd.phase')}</span>

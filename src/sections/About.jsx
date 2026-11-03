@@ -36,7 +36,7 @@ const About = () => {
             </li>
             <li className="flex justify-between border-b border-gray-200 pb-2">
               <span className="mono-detail text-black">{t('about.location')}</span>
-              <span className="text-sm font-medium">Samsun, TR</span>
+              <span className="text-sm font-medium">Rize, TR</span>
             </li>
             <li className="flex justify-between border-b border-gray-200 pb-2">
               <span className="mono-detail text-black">{t('about.focus')}</span>

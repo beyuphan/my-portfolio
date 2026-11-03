@@ -17,8 +17,6 @@ const Hero = () => {
     .map((id) => projects.find((p) => p.id === id))
     .filter(Boolean);
 
-  const finals = projects.filter((p) => p.award).length;
-
   return (
     <section className="relative pt-32 pb-20 px-6 overflow-hidden">
       {/* Hafif grid */}
@@ -67,10 +65,6 @@ const Hero = () => {
               <span className="mono-detail">{t('hero.projects')}</span>
             </div>
             <div>
-              <span className="block text-3xl font-black tracking-tight">{finals}</span>
-              <span className="mono-detail">{t('hero.finals')}</span>
-            </div>
-            <div>
               <span className="block text-3xl font-black tracking-tight">2026</span>
               <span className="mono-detail">{t('hero.grad')}</span>
             </div>
@@ -89,10 +83,9 @@ const Hero = () => {
             <pre className="p-5 text-[13px] leading-7 font-mono text-gray-300 overflow-x-auto">
 <span className="text-purple-400">const</span> <span className="text-blue-300">eyuphan</span> = {'{'}{'\n'}
 {'  '}role: <span className="text-green-300">"{t('hero.status')}"</span>,{'\n'}
-{'  '}city: <span className="text-green-300">"Samsun"</span>,{'\n'}
+{'  '}city: <span className="text-green-300">"Rize"</span>,{'\n'}
 {'  '}stack: [<span className="text-green-300">"Python"</span>, <span className="text-green-300">"TypeScript"</span>, <span className="text-green-300">"Kotlin"</span>, <span className="text-green-300">"Rust"</span>],{'\n'}
 {'  '}focus: [<span className="text-green-300">"Backend"</span>, <span className="text-green-300">"Mobile"</span>, <span className="text-green-300">"AI"</span>],{'\n'}
-{'  '}hackathonFinals: <span className="text-orange-300">{finals}</span>,{'\n'}
 {'  '}openToWork: <span className="text-orange-300">true</span><span className="inline-block w-2 h-4 bg-gray-300 align-middle ml-1 animate-pulse"></span>{'\n'}
 {'}'};
             </pre>
