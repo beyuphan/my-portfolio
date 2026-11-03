@@ -37,6 +37,50 @@ const SystemLogs = () => {
         tr: "DataStore kullanılarak cihaz tabanlı yerel favori sistemi kuruldu ve ViewModel seviyesinde Swipe-to-Action mekanizmaları yazılarak kısıtlama aşıldı.",
         en: "A device-based local favorites system was built with DataStore, and Swipe-to-Action mechanics at the ViewModel level overcame the limitation."
       }
+    },
+    {
+      date: "2025_Q4",
+      error: {
+        tr: "Görüntü İşleme uygulamasında sabit eşikli belge tespiti, koyu zeminde ve gölgeli telefon fotoğraflarında kâğıdı kaçırdı; OMR ise ters çekilen formları yanlış okudu.",
+        en: "In the image-processing app, fixed-threshold document detection missed the paper on dark backgrounds and in shadowed phone photos, and OMR misread forms shot upside down."
+      },
+      resolution: {
+        tr: "Tespit kademeli hale getirildi: parlak bölge adayları, GrabCut ve kenar doğrusu uydurma, olmazsa manuel köşe seçimi. OMR'de kâğıt dört yönde denenip en tutarlı okuma seçildi.",
+        en: "Detection became a cascade: bright-region candidates, GrabCut and edge-line fitting, then manual corner selection as a last resort. OMR now tries four orientations and keeps the most consistent reading."
+      }
+    },
+    {
+      date: "2026_Q3",
+      error: {
+        tr: "Mısra'nın ilk kürasyon sürümü tek bir uzun tool-calling sohbetiydi; Groq'un dakikalık token sınırına takıldı. Sonraki sürümde model, listede olmayan şiir başlıkları uydurmaya başladı.",
+        en: "Mısra's first curation version was one long tool-calling chat and hit Groq's per-minute token limit. In the next version, the model started inventing poem titles that weren't in the list."
+      },
+      resolution: {
+        tr: "Model artık önce yalnızca şair seçiyor, sonra o şairin doğrulanmış listesinden çoktan seçmeli bir şiir seçiyor. Listede olmayan bir şeyi seçmesi mümkün değil.",
+        en: "The model now first picks only a poet, then picks a poem multiple-choice from that poet's verified list. It cannot choose anything that isn't on the list."
+      }
+    },
+    {
+      date: "2026_Q4",
+      error: {
+        tr: "Kıvılcım'daki yangın havası indeksi sezgisel olarak mantıklıydı. Geçmiş tespitlere karşı ölçünce yangın olan ve olmayan yerleri ancak zayıf ayırdı (AUC ≈ 0.7), yangının ertesi gün büyümesiyle ise hiç ilişkisi çıkmadı.",
+        en: "Kıvılcım's fire-weather index made intuitive sense. Measured against past detections, it only weakly separated fire from no-fire places (AUC ≈ 0.7) and showed no relation to whether a fire grew the next day."
+      },
+      resolution: {
+        tr: "İndeks \"deneysel\" etiketiyle kaldı, yayılım tahmini olarak sunulmuyor. Ölçüm sonuçları sitede /methodology sayfasında herkese açık ve tekrar üretilebilir.",
+        en: "The index stays, labeled experimental, and is never presented as a spread forecast. The measurements are public on the site's /methodology page and reproducible."
+      }
+    },
+    {
+      date: "2026_Q4",
+      error: {
+        tr: "HuggingFace Space'i \"Scheduling failure: unable to schedule\" hatasıyla düştü ve 503 verdi. Kodda bir sorun yoktu.",
+        en: "The HuggingFace Space went down with \"Scheduling failure: unable to schedule\" and returned 503. The code was fine."
+      },
+      resolution: {
+        tr: "Önce Space'in durumunu API'den okuyup hatanın altyapıdan geldiğini doğruladım, sonra boş bir commit ile yeniden derlemeyi tetikledim. Space yeniden RUNNING oldu.",
+        en: "I first read the Space's status from the API to confirm the failure was infrastructure, then triggered a rebuild with an empty commit. The Space is RUNNING again."
+      }
     }
   ];
 

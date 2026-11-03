@@ -370,6 +370,7 @@ export const projects = [
       en: "A social poetry app that serves a poem twice a day, where readers star, list, and share individual lines. AI picks the poems, finds a reading on YouTube, and sends them to subscribers via web push."
     },
     tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind v4", "Supabase", "PostgreSQL", "Deno Edge Functions", "pg_cron", "Groq", "YouTube Data API", "Web Push", "PWA", "Remotion"],
+    demoLink: "https://siir-eta.vercel.app",
     impact: {
       tr: [
         "Sabah ve akşam olmak üzere günde iki şiiri otomatik seçip yayınlar; şiir, okuma videosu ve bildirim insan müdahalesi olmadan hazırlanır.",

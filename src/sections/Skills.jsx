@@ -21,16 +21,16 @@ const Skills = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16 gap-y-20">
         {skills.map((skillGroup, index) => (
-          <div key={index} className="space-y-8">
+          <div key={index} className="space-y-6">
             <h3 className="mono-detail text-black border-b border-gray-200 pb-4">
               {L(skillGroup.category)}
             </h3>
-            <div className="flex flex-wrap gap-x-8 gap-y-6">
+            <div className="flex flex-wrap gap-x-5 gap-y-3">
               {skillGroup.items.map((item, i) => (
                 <div key={i} className="group cursor-default">
-                  <span className="text-2xl md:text-3xl font-bold text-gray-200 group-hover:text-black transition-colors duration-500 tracking-tight">
+                  <span className="text-xl md:text-2xl font-bold text-gray-300 group-hover:text-black transition-colors duration-500 tracking-tight">
                     {item}
                   </span>
                 </div>

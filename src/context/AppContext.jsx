@@ -40,9 +40,12 @@ export const AppProvider = ({ children }) => {
 
         // Hero
         'hero.status': 'Bilgisayar Mühendisi',
-        'hero.title': 'Fikirden\nürüne.',
-        'hero.desc': 'Yapay zekâ ajanları, harita ve uydu verisi, mobil uygulamalar ve oyunlar geliştiriyorum. GeoIntel, Kıvılcım ve SimTrack gibi projelerimi aşağıda bulabilirsin.',
+        'hero.title': 'Merhaba, ben\nEyüphan.',
+        'hero.desc': 'Yapay zekâ, harita ve uydu verisi, mobil uygulama ve oyun yapıyorum. Bitirdiklerimi, hâlâ uğraştıklarımı ve nasıl yaptığımı aşağıda bulabilirsin.',
         'hero.projects': 'Proje',
+        'hero.seeProjects': 'Projelere Bak',
+        'hero.finals': 'Hackathon Finali',
+        'hero.grad': 'Mezuniyet',
         'cv.download': 'CV İndir',
 
         // Mode labels
@@ -74,8 +77,8 @@ export const AppProvider = ({ children }) => {
         // About section
         'about.label': 'Hakkımda',
         'about.title': 'Ben Kimim.',
-        'about.p1': 'Ondokuz Mayıs Üniversitesi Bilgisayar Mühendisliği mezunuyum. Backend, mobil ve yapay zekâ tarafında çalışıyorum; hackathonlarda ürünü baştan sona çıkarmayı seviyorum.',
-        'about.p2': 'Anadolu Üniversitesi\'nde Görsel İletişim okuyorum. Boş zamanlarımda oyun yapıyor, sinema ve simülasyon oyunlarıyla ilgileniyorum; bunlar arayüz ve ürün tasarlarken de işime yarıyor.',
+        'about.p1': 'Samsun\'da yaşıyorum. Önce İYTE\'de makine mühendisliğine başladım, bana göre olmadığını görünce OMÜ Bilgisayar Mühendisliği\'ne yatay geçiş yaptım ve 2026\'da mezun oldum. En çok backend, mobil ve yapay zekâ tarafıyla uğraşıyorum; hackathonlarda bir fikri baştan sona ürüne çevirmek hoşuma gidiyor.',
+        'about.p2': 'Bir yandan Anadolu Üniversitesi\'nde Görsel İletişim okuyorum. Sinemaya ve oyunlara meraklıyım; Ash n Seed gibi küçük oyunlar da yapıyorum. Yazılımda iyi çalışan şeyin aynı zamanda iyi görünmesini istiyorum.',
         'about.university': 'Üniversite',
         'about.location': 'Konum',
         'about.focus': 'Odak',
@@ -146,9 +149,12 @@ export const AppProvider = ({ children }) => {
 
         // Hero
         'hero.status': 'Computer Engineer',
-        'hero.title': 'From idea\nto product.',
-        'hero.desc': 'I build AI agents, map and satellite data tools, mobile apps, and games. You can find projects like GeoIntel, Kıvılcım, and SimTrack below.',
+        'hero.title': 'Hi, I\'m\nEyüphan.',
+        'hero.desc': 'I build AI, map and satellite data tools, mobile apps, and games. Below you can find what I finished, what I\'m still working on, and how I built it.',
         'hero.projects': 'Projects',
+        'hero.seeProjects': 'See Projects',
+        'hero.finals': 'Hackathon Finals',
+        'hero.grad': 'Graduated',
         'cv.download': 'Download CV',
 
         // Mode labels
@@ -180,8 +186,8 @@ export const AppProvider = ({ children }) => {
         // About section
         'about.label': 'About Me',
         'about.title': 'Who I Am.',
-        'about.p1': 'I am a Computer Engineering graduate from Ondokuz Mayıs University. I work on backend, mobile, and AI, and I like taking a product from start to finish at hackathons.',
-        'about.p2': 'I am studying Visual Communication at Anadolu University. In my free time I make games and follow cinema and simulation games, which also help when I design interfaces and products.',
+        'about.p1': 'I live in Samsun. I started in mechanical engineering at İYTE, realized it wasn\'t for me, transferred to Computer Engineering at OMU, and graduated in 2026. I mostly work on backend, mobile, and AI, and I enjoy taking an idea all the way to a product at hackathons.',
+        'about.p2': 'I\'m also studying Visual Communication at Anadolu University. I\'m into cinema and games, and I make small games like Ash n Seed. I want software that works well to look good too.',
         'about.university': 'University',
         'about.location': 'Location',
         'about.focus': 'Focus',

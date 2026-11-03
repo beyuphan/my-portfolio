@@ -14,9 +14,9 @@ DENEYİM:
 - Rize Belediyesi — Yazılım Geliştirme Stajyeri / Mobil Geliştirici (Temmuz–Ağustos 2025). Belediye dijital hizmetleri için Flutter uygulamalar geliştirdim, UI optimizasyonu ve backend entegrasyon süreçleri yürüttüm.
 
 TEKNİK YETKİNLİKLER:
-- Diller: Python, Java (Jakarta EE), C#, Kotlin, Dart, JavaScript/TypeScript, SQL
-- Backend: Node.js / NestJS, Express, REST, WebSockets, Prisma; PostgreSQL, MySQL, Firebase
-- Mobil & Frontend: Flutter, Jetpack Compose, React
+- Diller: Python, TypeScript/JavaScript, Java (Jakarta EE), Kotlin, Dart, C#, Rust, SQL, GDScript
+- Backend & Veri: FastAPI, Node.js / NestJS, REST, WebSockets, Prisma, SQLAlchemy; PostgreSQL (PostGIS), MySQL, Redis, Supabase, Firebase
+- Mobil & Frontend: Flutter, Jetpack Compose, React, Next.js, Tailwind, Tauri; oyun: Godot
 - Mimari & Araçlar: MCP (Model Context Protocol), Docker, Git, S3, Railway; sinyal işleme
 
 PROJELER (en çok bahsetmek istediklerim önce):
